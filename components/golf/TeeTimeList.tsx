@@ -1,0 +1,88 @@
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { AddTeeTimeDialog } from './AddTeeTimeDialog'
+import { useGolfTeeTimes } from '@/lib/hooks/useGolfTeeTimes'
+import { format } from 'date-fns'
+
+interface TeeTimeListProps {
+  tripId: string
+}
+
+export function TeeTimeList({ tripId }: TeeTimeListProps) {
+  const [showAddDialog, setShowAddDialog] = useState(false)
+  const { teeTimes, loading, error } = useGolfTeeTimes(tripId)
+
+  if (loading) {
+    return <p className="text-sm text-[#A99985]">Loading tee times...</p>
+  }
+
+  if (error) {
+    return <p className="text-sm text-red-600">{error}</p>
+  }
+
+  return (
+    <div className="space-y-4">
+      {teeTimes.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-sm text-[#A99985] mb-4">No tee times scheduled yet</p>
+          <Button onClick={() => setShowAddDialog(true)}>
+            Add First Tee Time
+          </Button>
+        </div>
+      ) : (
+        <>
+          <div className="space-y-3">
+            {teeTimes.map((teeTime) => (
+              <div
+                key={teeTime.id}
+                className="rounded-[5px] border border-[#DAD2BC] bg-white p-4 space-y-2"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-semibold text-[#252323]">{teeTime.course_name}</h4>
+                    {teeTime.course_location && (
+                      <p className="text-sm text-[#A99985]">{teeTime.course_location}</p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-[#252323]">
+                      {format(new Date(teeTime.tee_time), 'MMM d, yyyy')}
+                    </p>
+                    <p className="text-sm text-[#A99985]">
+                      {format(new Date(teeTime.tee_time), 'h:mm a')}
+                    </p>
+                  </div>
+                </div>
+
+                {teeTime.notes && (
+                  <p className="text-sm text-[#A99985]">{teeTime.notes}</p>
+                )}
+
+                <div className="flex items-center justify-between pt-2 border-t border-[#DAD2BC]">
+                  <p className="text-xs text-[#A99985]">
+                    {teeTime.players?.length || 0} / {teeTime.num_players} players
+                  </p>
+                  <Button variant="ghost" size="sm">
+                    Enter Scores
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <Button onClick={() => setShowAddDialog(true)} className="w-full">
+            Add Tee Time
+          </Button>
+        </>
+      )}
+
+      <AddTeeTimeDialog
+        tripId={tripId}
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+      />
+    </div>
+  )
+}

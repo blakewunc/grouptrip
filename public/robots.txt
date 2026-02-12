@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow authenticated pages
+Disallow: /trips/
+Disallow: /settings
+
+Sitemap: https://yourapp.vercel.app/sitemap.xml

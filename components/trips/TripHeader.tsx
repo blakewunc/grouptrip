@@ -1,0 +1,121 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+
+interface TripHeaderProps {
+  trip: {
+    id: string
+    title: string
+    destination: string
+    start_date: string
+    end_date: string
+    status: string
+  }
+  isOrganizer: boolean
+}
+
+export function TripHeader({ trip, isOrganizer }: TripHeaderProps) {
+  const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleEdit = () => {
+    router.push(`/trips/${trip.id}/edit`)
+  }
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this trip? This action cannot be undone.')) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      const response = await fetch(`/api/trips/${trip.id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete trip')
+      }
+
+      router.push('/trips')
+    } catch (error: any) {
+      alert(error.message || 'Failed to delete trip')
+      setIsDeleting(false)
+    }
+  }
+
+  const formatDateRange = () => {
+    const start = new Date(trip.start_date)
+    const end = new Date(trip.end_date)
+
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
+
+    if (start.getFullYear() === end.getFullYear()) {
+      if (start.getMonth() === end.getMonth()) {
+        return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { day: 'numeric', year: 'numeric' })}`
+      }
+      return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', options)}`
+    }
+    return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'planning':
+        return 'bg-blue-100 text-blue-700 border border-blue-200'
+      case 'confirmed':
+        return 'bg-green-100 text-green-700 border border-green-200'
+      case 'completed':
+        return 'bg-gray-100 text-gray-700 border border-gray-200'
+      case 'cancelled':
+        return 'bg-red-100 text-red-700 border border-red-200'
+      default:
+        return 'bg-gray-100 text-gray-700 border border-gray-200'
+    }
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-[5px] border border-[#DAD2BC] bg-white p-8 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      <div className="relative z-10">
+        <div className="mb-4 flex items-center justify-between">
+          <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor(trip.status)}`}>
+            {trip.status}
+          </span>
+          {isOrganizer && (
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handleEdit}>
+                Edit Trip
+              </Button>
+              <Button variant="secondary" size="sm" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? 'Deleting...' : 'Delete Trip'}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <h1 className="mb-4 text-4xl font-bold tracking-tight text-[#252323]">
+          {trip.title}
+        </h1>
+
+        <div className="flex flex-wrap items-center gap-6 text-[#A99985]">
+          <div className="flex items-center">
+            <svg className="mr-2 h-5 w-5 text-[#70798C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span className="text-base font-medium text-[#252323]">{trip.destination}</span>
+          </div>
+
+          <div className="flex items-center">
+            <svg className="mr-2 h-5 w-5 text-[#70798C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span className="text-base">{formatDateRange()}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
