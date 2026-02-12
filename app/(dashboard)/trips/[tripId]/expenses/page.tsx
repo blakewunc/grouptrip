@@ -74,7 +74,7 @@ export default function ExpensesPage({ params }: { params: Promise<{ tripId: str
   // Prepare members list for dialogs and balance sheet
   const members = (trip?.trip_members || []).map(m => ({
     id: m.profiles.id,
-    name: m.profiles.display_name || m.profiles.email,
+    name: (m.profiles as any).display_name || m.profiles.email,
     paymentProfile: paymentProfiles[m.profiles.id],
   }))
 
