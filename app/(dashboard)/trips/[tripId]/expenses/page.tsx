@@ -10,6 +10,13 @@ import { useExpenses } from '@/lib/hooks/useExpenses'
 import { useTrip } from '@/lib/hooks/useTrip'
 import { createClient } from '@/lib/supabase/client'
 
+// Local type definition to ensure correct typing
+interface ProfileWithDisplayName {
+  id: string
+  email: string
+  display_name: string | null
+}
+
 export default function ExpensesPage({ params }: { params: Promise<{ tripId: string }> }) {
   const { tripId } = use(params)
   const router = useRouter()
@@ -72,11 +79,14 @@ export default function ExpensesPage({ params }: { params: Promise<{ tripId: str
   }
 
   // Prepare members list for dialogs and balance sheet
-  const members = (trip?.trip_members || []).map(m => ({
-    id: m.profiles.id,
-    name: (m.profiles as any).display_name || m.profiles.email,
-    paymentProfile: paymentProfiles[m.profiles.id],
-  }))
+  const members = (trip?.trip_members || []).map(m => {
+    const profile = m.profiles as ProfileWithDisplayName
+    return {
+      id: profile.id,
+      name: profile.display_name || profile.email,
+      paymentProfile: paymentProfiles[profile.id],
+    }
+  })
 
   if (tripLoading || expensesLoading || !currentUserId) {
     return (
