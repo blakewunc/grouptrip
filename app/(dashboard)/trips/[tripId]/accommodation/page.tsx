@@ -9,6 +9,21 @@ import { Label } from '@/components/ui/label'
 import { useTrip } from '@/lib/hooks/useTrip'
 import { createClient } from '@/lib/supabase/client'
 
+type DocumentCategory = 'accommodation' | 'reservation' | 'activity' | 'flight' | 'other'
+
+interface TripDocument {
+  id: string
+  title: string
+  url: string
+  description: string | null
+  category: DocumentCategory
+  created_by: string
+  created_by_profile?: {
+    display_name: string | null
+    email: string
+  }
+}
+
 export default function AccommodationPage({ params }: { params: Promise<{ tripId: string }> }) {
   const { tripId } = use(params)
   const router = useRouter()
@@ -19,7 +34,7 @@ export default function AccommodationPage({ params }: { params: Promise<{ tripId
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [accommodation, setAccommodation] = useState<any>(null)
-  const [documents, setDocuments] = useState<any[]>([])
+  const [documents, setDocuments] = useState<TripDocument[]>([])
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -35,7 +50,7 @@ export default function AccommodationPage({ params }: { params: Promise<{ tripId
     title: '',
     url: '',
     description: '',
-    category: 'other' as 'accommodation' | 'reservation' | 'activity' | 'flight' | 'other'
+    category: 'other' as DocumentCategory
   })
   const [showDocForm, setShowDocForm] = useState(false)
 
