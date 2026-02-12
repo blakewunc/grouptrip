@@ -139,7 +139,7 @@ export async function POST(
     }
 
     // Create splits
-    let splits = []
+    let splits: Array<{ expense_id: string; user_id: string; amount: number }> = []
     if (split_type === 'equal') {
       // Get all trip members for equal split
       const { data: members } = await supabase
