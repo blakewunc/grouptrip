@@ -35,7 +35,7 @@ export async function GET(
         *,
         profiles:user_id (
           id,
-          full_name,
+          display_name,
           email
         )
       `)
@@ -48,7 +48,7 @@ export async function GET(
     // Transform data
     const transformedTickets = tickets?.map((ticket: any) => ({
       ...ticket,
-      user_name: ticket.profiles?.full_name || ticket.profiles?.email || 'Unknown',
+      user_name: ticket.profiles?.display_name || ticket.profiles?.email || 'Unknown',
       profiles: undefined,
     }))
 

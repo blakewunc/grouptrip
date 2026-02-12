@@ -35,7 +35,7 @@ export async function GET(
         *,
         profiles:user_id (
           id,
-          full_name,
+          display_name,
           email
         ),
         golf_tee_times:tee_time_id (
@@ -54,7 +54,7 @@ export async function GET(
     // Transform data
     const transformedScores = scores?.map((score: any) => ({
       user_id: score.user_id,
-      user_name: score.profiles?.full_name || score.profiles?.email || 'Unknown',
+      user_name: score.profiles?.display_name || score.profiles?.email || 'Unknown',
       score: score.score,
       handicap: score.handicap,
       tee_time_id: score.tee_time_id,

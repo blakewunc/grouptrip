@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 interface Profile {
   id: string
   email: string
-  full_name: string | null
+  display_name: string | null
 }
 
 interface TripMember {

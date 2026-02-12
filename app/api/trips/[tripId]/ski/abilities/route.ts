@@ -35,7 +35,7 @@ export async function GET(
         *,
         profiles:user_id (
           id,
-          full_name,
+          display_name,
           email
         )
       `)
@@ -48,7 +48,7 @@ export async function GET(
     // Transform data
     const transformedAbilities = abilities?.map((ability: any) => ({
       ...ability,
-      user_name: ability.profiles?.full_name || ability.profiles?.email || 'Unknown',
+      user_name: ability.profiles?.display_name || ability.profiles?.email || 'Unknown',
       profiles: undefined,
     }))
 

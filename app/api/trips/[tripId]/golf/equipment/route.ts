@@ -35,7 +35,7 @@ export async function GET(
         *,
         profiles:user_id (
           id,
-          full_name,
+          display_name,
           email
         )
       `)
@@ -48,7 +48,7 @@ export async function GET(
     // Transform data to include user_name
     const transformedEquipment = equipment?.map((eq: any) => ({
       ...eq,
-      user_name: eq.profiles?.full_name || eq.profiles?.email || 'Unknown',
+      user_name: eq.profiles?.display_name || eq.profiles?.email || 'Unknown',
       profiles: undefined,
     }))
 

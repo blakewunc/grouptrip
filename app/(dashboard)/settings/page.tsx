@@ -14,9 +14,9 @@ export default function SettingsPage() {
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [profile, setProfile] = useState<{ email: string; full_name: string }>({
+  const [profile, setProfile] = useState<{ email: string; display_name: string }>({
     email: '',
-    full_name: '',
+    display_name: '',
   })
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function SettingsPage() {
 
         const { data: profile, error } = await supabase
           .from('profiles')
-          .select('email, full_name')
+          .select('email, display_name')
           .eq('id', user.id)
           .single()
 
@@ -38,7 +38,7 @@ export default function SettingsPage() {
 
         setProfile({
           email: profile?.email || user.email || '',
-          full_name: profile?.full_name || '',
+          display_name: profile?.display_name || '',
         })
       } catch (error: any) {
         toast.error('Failed to load profile')
@@ -55,7 +55,7 @@ export default function SettingsPage() {
     setSaving(true)
 
     const formData = new FormData(e.currentTarget)
-    const full_name = formData.get('full_name') as string
+    const display_name = formData.get('display_name') as string
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
@@ -63,13 +63,13 @@ export default function SettingsPage() {
 
       const { error } = await supabase
         .from('profiles')
-        .update({ full_name })
+        .update({ display_name })
         .eq('id', user.id)
 
       if (error) throw error
 
       toast.success('Profile updated successfully')
-      setProfile({ ...profile, full_name })
+      setProfile({ ...profile, display_name })
     } catch (error: any) {
       toast.error(error.message || 'Failed to update profile')
     } finally {
@@ -124,11 +124,11 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="full_name">Full Name</Label>
+                  <Label htmlFor="display_name">Full Name</Label>
                   <Input
-                    id="full_name"
-                    name="full_name"
-                    defaultValue={profile.full_name}
+                    id="display_name"
+                    name="display_name"
+                    defaultValue={profile.display_name}
                     placeholder="Enter your full name"
                     disabled={saving}
                   />

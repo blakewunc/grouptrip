@@ -35,7 +35,7 @@ export async function GET(
         *,
         profiles:user_id (
           id,
-          full_name,
+          display_name,
           email
         )
       `)
@@ -48,7 +48,7 @@ export async function GET(
     // Transform data
     const transformedRentals = rentals?.map((rental: any) => ({
       ...rental,
-      user_name: rental.profiles?.full_name || rental.profiles?.email || 'Unknown',
+      user_name: rental.profiles?.display_name || rental.profiles?.email || 'Unknown',
       profiles: undefined,
     }))
 

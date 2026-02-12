@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 interface Profile {
   id: string
   email: string
-  full_name: string | null
+  display_name: string | null
 }
 
 interface TripMember {
@@ -73,14 +73,14 @@ export function MemberList({ members, inviteCode }: MemberListProps) {
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#70798C]">
                 <span className="text-sm font-semibold text-white">
-                  {(member.profiles.full_name || member.profiles.email).charAt(0).toUpperCase()}
+                  {(member.profiles.display_name || member.profiles.email).charAt(0).toUpperCase()}
                 </span>
               </div>
               <div>
                 <p className="font-medium text-[#252323]">
-                  {member.profiles.full_name || member.profiles.email}
+                  {member.profiles.display_name || member.profiles.email}
                 </p>
-                {member.profiles.full_name && (
+                {member.profiles.display_name && (
                   <p className="text-sm text-[#A99985]">{member.profiles.email}</p>
                 )}
               </div>
