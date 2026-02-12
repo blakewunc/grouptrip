@@ -1,0 +1,25 @@
+
+> event-planner@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.3s
+  Running TypeScript ...
+Failed to compile.
+
+./components/supplies/AddSupplyDialog.tsx:121:30
+Type error: Type '{ children: Element; id: string; }' is not assignable to type 'IntrinsicAttributes & SelectTriggerProps & RefAttributes<HTMLButtonElement>'.
+  Property 'id' does not exist on type 'IntrinsicAttributes & SelectTriggerProps & RefAttributes<HTMLButtonElement>'.
+
+[0m [90m 119 |[39m               onValueChange[33m=[39m{(value) [33m=>[39m setFormData({ [33m...[39mformData[33m,[39m category[33m:[39m value })}
+ [90m 120 |[39m             [33m>[39m
+[31m[1m>[22m[39m[90m 121 |[39m               [33m<[39m[33mSelectTrigger[39m id[33m=[39m[32m"category"[39m[33m>[39m
+ [90m     |[39m                              [31m[1m^[22m[39m
+ [90m 122 |[39m                 [33m<[39m[33mSelectValue[39m [33m/[39m[33m>[39m
+ [90m 123 |[39m               [33m<[39m[33m/[39m[33mSelectTrigger[39m[33m>[39m
+ [90m 124 |[39m               [33m<[39m[33mSelectContent[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

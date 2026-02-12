@@ -35,8 +35,8 @@ export function validateCustomSplits(splits: BudgetSplit[], totalCost: number): 
 export interface BudgetCategory {
   id: string
   name: string
-  estimatedCost: number
-  splitType: SplitType
+  estimated_cost: number
+  split_type: SplitType
   customSplits?: BudgetSplit[]
 }
 
@@ -48,15 +48,15 @@ export function calculatePerPersonBudget(
   if (memberCount === 0) return 0
 
   return categories.reduce((total, category) => {
-    if (category.splitType === 'none') {
+    if (category.split_type === 'none') {
       return total
     }
 
-    if (category.splitType === 'equal') {
-      return total + calculateEqualSplit(category.estimatedCost, memberCount)
+    if (category.split_type === 'equal') {
+      return total + calculateEqualSplit(category.estimated_cost, memberCount)
     }
 
-    if (category.splitType === 'custom' && category.customSplits && userId) {
+    if (category.split_type === 'custom' && category.customSplits && userId) {
       const userSplit = category.customSplits.find(s => s.userId === userId)
       return total + (userSplit?.amount || 0)
     }
@@ -70,6 +70,6 @@ export function calculatePerPersonBudget(
  */
 export function calculateTotalBudget(categories: BudgetCategory[]): number {
   return roundMoney(
-    categories.reduce((sum, category) => sum + category.estimatedCost, 0)
+    categories.reduce((sum, category) => sum + category.estimated_cost, 0)
   )
 }

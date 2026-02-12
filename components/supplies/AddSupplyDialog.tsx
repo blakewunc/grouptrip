@@ -118,7 +118,7 @@ export function AddSupplyDialog({ tripId, onSuccess }: AddSupplyDialogProps) {
               value={formData.category}
               onValueChange={(value) => setFormData({ ...formData, category: value })}
             >
-              <SelectTrigger id="category">
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

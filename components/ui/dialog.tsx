@@ -49,8 +49,8 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
   )
 }
 
-export function DialogContent({ children }: { children: React.ReactNode }) {
-  return <div className="mt-4">{children}</div>
+export function DialogContent({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={`mt-4 ${className || ''}`}>{children}</div>
 }
 
 export function DialogHeader({ children }: { children: React.ReactNode }) {

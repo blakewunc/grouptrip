@@ -105,8 +105,8 @@ export function AddCategoryDialog({ tripId, open, onOpenChange, onSuccess }: Add
             <Label htmlFor="split_type">Split Type *</Label>
             <Select
               value={formData.split_type}
-              onValueChange={(value: 'equal' | 'custom' | 'none') =>
-                setFormData({ ...formData, split_type: value })
+              onValueChange={(value) =>
+                setFormData({ ...formData, split_type: value as 'equal' | 'custom' | 'none' })
               }
               disabled={loading}
             >
