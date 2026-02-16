@@ -218,11 +218,9 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitch
           <TripMembersCard
             members={members}
             inviteCode={trip.invite_code}
-            onInviteMore={() => {
-              const link = `${window.location.origin}/invite/${trip.invite_code}`
-              navigator.clipboard.writeText(link)
-              toast.success('Invite link copied!')
-            }}
+            tripId={tripId}
+            tripTitle={trip.title}
+            isOrganizer={isOrganizer}
           />
 
           <AvailabilitySummaryCard
