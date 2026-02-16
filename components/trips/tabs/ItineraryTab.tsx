@@ -1,0 +1,173 @@
+'use client'
+
+import { useState } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { AddItemDialog } from '@/components/itinerary/AddItemDialog'
+import { CommentSection } from '@/components/itinerary/CommentSection'
+import { useItinerary, type ItineraryItem } from '@/lib/hooks/useItinerary'
+
+interface ItineraryTabProps {
+  tripId: string
+  trip: any
+  currentUserId: string | null
+  isOrganizer: boolean
+}
+
+export function ItineraryTab({ tripId, trip, currentUserId }: ItineraryTabProps) {
+  const { items, loading, error } = useItinerary(tripId)
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+
+  const handleDelete = async (itemId: string) => {
+    if (!confirm('Delete this activity?')) return
+
+    try {
+      const response = await fetch(`/api/trips/${tripId}/itinerary/${itemId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to delete item')
+      }
+    } catch (error: any) {
+      alert(error.message)
+    }
+  }
+
+  const toggleComments = (itemId: string) => {
+    setExpandedItems((prev) => {
+      const next = new Set(prev)
+      if (next.has(itemId)) {
+        next.delete(itemId)
+      } else {
+        next.add(itemId)
+      }
+      return next
+    })
+  }
+
+  // Group items by date
+  const itemsByDate = items.reduce((acc, item) => {
+    if (!acc[item.date]) {
+      acc[item.date] = []
+    }
+    acc[item.date].push(item)
+    return acc
+  }, {} as Record<string, ItineraryItem[]>)
+
+  const dates = Object.keys(itemsByDate).sort()
+
+  if (loading) {
+    return <p className="text-[#A99985]">Loading itinerary...</p>
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-lg bg-red-50 p-4 text-red-800">{error}</div>
+    )
+  }
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-[#252323]">Itinerary</h2>
+          <p className="text-[#A99985]">Plan your day-by-day schedule for {trip.title}</p>
+        </div>
+        <AddItemDialog tripId={tripId} onSuccess={() => {}} />
+      </div>
+
+      {/* Day-by-day itinerary */}
+      {dates.length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="mb-4 text-[#A99985]">No activities planned yet</p>
+            <AddItemDialog tripId={tripId} onSuccess={() => {}} />
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-8">
+          {dates.map((date) => (
+            <div key={date}>
+              <h3 className="mb-4 text-xl font-bold text-[#252323]">
+                {new Date(date).toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </h3>
+              <div className="space-y-4">
+                {itemsByDate[date].map((item) => (
+                  <Card key={item.id}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <CardTitle>{item.title}</CardTitle>
+                          <CardDescription className="mt-1 space-y-1">
+                            {item.time && <div>{'\u{1F550}'} {item.time}</div>}
+                            {item.location && <div>{'\u{1F4CD}'} {item.location}</div>}
+                          </CardDescription>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(item.id)}
+                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {item.description && (
+                        <p className="mb-4 text-[#A99985]">{item.description}</p>
+                      )}
+
+                      {/* Comments toggle */}
+                      <div className="border-t border-[#DAD2BC] pt-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleComments(item.id)}
+                          className="mb-3"
+                        >
+                          <svg
+                            className="mr-2 h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                            />
+                          </svg>
+                          {expandedItems.has(item.id) ? 'Hide Comments' : 'Show Comments'}
+                        </Button>
+
+                        {expandedItems.has(item.id) && (
+                          <div className="rounded-lg bg-[#F5F1ED] p-4">
+                            <CommentSection
+                              tripId={tripId}
+                              itineraryItemId={item.id}
+                              currentUserId={currentUserId}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

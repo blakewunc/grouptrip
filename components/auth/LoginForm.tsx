@@ -7,15 +7,75 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { loginSchema, signupSchema } from '@/lib/validations/auth'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [authMethod, setAuthMethod] = useState<'password' | 'magic-link'>('password')
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
   const next = searchParams.get('next') || '/trips'
+
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+
+    const result = loginSchema.safeParse({ email, password })
+    if (!result.success) {
+      setMessage({ type: 'error', text: result.error.issues[0].message })
+      setLoading(false)
+      return
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw error
+      router.push(next)
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Failed to sign in' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePasswordSignup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+
+    const result = signupSchema.safeParse({ email, password, confirmPassword })
+    if (!result.success) {
+      setMessage({ type: 'error', text: result.error.issues[0].message })
+      setLoading(false)
+      return
+    }
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        },
+      })
+      if (error) throw error
+      setMessage({
+        type: 'success',
+        text: 'Check your email to confirm your account!',
+      })
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Failed to create account' })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,18 +89,13 @@ export function LoginForm() {
           emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
         },
       })
-
       if (error) throw error
-
       setMessage({
         type: 'success',
         text: 'Check your email for the magic link!',
       })
     } catch (error: any) {
-      setMessage({
-        type: 'error',
-        text: error.message || 'Failed to send magic link',
-      })
+      setMessage({ type: 'error', text: error.message || 'Failed to send magic link' })
     } finally {
       setLoading(false)
     }
@@ -57,51 +112,153 @@ export function LoginForm() {
           redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
         },
       })
-
       if (error) throw error
     } catch (error: any) {
-      setMessage({
-        type: 'error',
-        text: error.message || 'Failed to sign in with Google',
-      })
+      setMessage({ type: 'error', text: error.message || 'Failed to sign in with Google' })
       setLoading(false)
     }
+  }
+
+  const switchMode = (mode: 'login' | 'signup') => {
+    setAuthMode(mode)
+    setMessage(null)
+    setPassword('')
+    setConfirmPassword('')
   }
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Welcome to GroupTrip</CardTitle>
-        <CardDescription>Sign in to start planning your next adventure</CardDescription>
+        <CardTitle>{authMode === 'login' ? 'Welcome Back' : 'Create Account'}</CardTitle>
+        <CardDescription>
+          {authMode === 'login'
+            ? 'Sign in to continue planning your trips'
+            : 'Sign up to start planning your next adventure'}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <form onSubmit={handleMagicLink} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Magic Link'}
-          </Button>
-        </form>
+        {/* Auth Method Toggle */}
+        <div className="flex rounded-[5px] border border-[#DAD2BC] p-1">
+          <button
+            type="button"
+            onClick={() => setAuthMethod('password')}
+            className={`flex-1 rounded-[3px] px-3 py-2 text-sm font-medium transition-colors ${
+              authMethod === 'password'
+                ? 'bg-[#70798C] text-white'
+                : 'text-[#A99985] hover:text-[#252323]'
+            }`}
+          >
+            Email & Password
+          </button>
+          <button
+            type="button"
+            onClick={() => setAuthMethod('magic-link')}
+            className={`flex-1 rounded-[3px] px-3 py-2 text-sm font-medium transition-colors ${
+              authMethod === 'magic-link'
+                ? 'bg-[#70798C] text-white'
+                : 'text-[#A99985] hover:text-[#252323]'
+            }`}
+          >
+            Magic Link
+          </button>
+        </div>
 
+        {/* Password Auth Form */}
+        {authMethod === 'password' && (
+          <form
+            onSubmit={authMode === 'login' ? handlePasswordLogin : handlePasswordSignup}
+            className="space-y-4"
+          >
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="At least 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+            {authMode === 'signup' && (
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+              </div>
+            )}
+            {authMode === 'login' && (
+              <div className="text-right">
+                <a href="/forgot-password" className="text-sm text-[#70798C] hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+            )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading
+                ? 'Please wait...'
+                : authMode === 'login'
+                ? 'Sign In'
+                : 'Create Account'}
+            </Button>
+          </form>
+        )}
+
+        {/* Magic Link Form */}
+        {authMethod === 'magic-link' && (
+          <form onSubmit={handleMagicLink} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email-magic">Email</Label>
+              <Input
+                id="email-magic"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Sending...' : 'Send Magic Link'}
+            </Button>
+            <p className="text-center text-xs text-[#A99985]">
+              We&apos;ll send a sign-in link to your email
+            </p>
+          </form>
+        )}
+
+        {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+            <span className="w-full border-t border-[#DAD2BC]" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-zinc-500 dark:bg-zinc-950">Or continue with</span>
+            <span className="bg-white px-2 text-[#A99985]">Or continue with</span>
           </div>
         </div>
 
+        {/* Google OAuth */}
         <Button
           type="button"
           variant="outline"
@@ -130,12 +287,13 @@ export function LoginForm() {
           Google
         </Button>
 
+        {/* Message Display */}
         {message && (
           <div
-            className={`rounded-md p-3 text-sm ${
+            className={`rounded-[5px] p-3 text-sm ${
               message.type === 'success'
-                ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                : 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                ? 'bg-green-50 text-green-800'
+                : 'bg-red-50 text-red-800'
             }`}
           >
             {message.text}
@@ -143,11 +301,30 @@ export function LoginForm() {
         )}
       </CardContent>
       <CardFooter className="flex justify-center">
-        <p className="text-sm text-zinc-500">
-          Don't have an account?{' '}
-          <a href="/signup" className="font-medium text-zinc-900 hover:underline dark:text-zinc-50">
-            Sign up
-          </a>
+        <p className="text-sm text-[#A99985]">
+          {authMode === 'login' ? (
+            <>
+              Don&apos;t have an account?{' '}
+              <button
+                type="button"
+                onClick={() => switchMode('signup')}
+                className="font-medium text-[#252323] hover:underline"
+              >
+                Sign up
+              </button>
+            </>
+          ) : (
+            <>
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className="font-medium text-[#252323] hover:underline"
+              >
+                Sign in
+              </button>
+            </>
+          )}
         </p>
       </CardFooter>
     </Card>
