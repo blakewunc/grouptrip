@@ -31,6 +31,7 @@ export async function GET(
           id,
           role,
           rsvp_status,
+          budget_cap,
           joined_at,
           profiles(id, display_name, email, avatar_url)
         )

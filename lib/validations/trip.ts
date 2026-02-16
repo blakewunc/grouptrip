@@ -27,6 +27,7 @@ export const updateTripSchema = z.object({
   description: z.string().max(1000, 'Description must be less than 1000 characters').optional(),
   budget_total: z.number().min(0).optional(),
   status: z.enum(['planning', 'confirmed', 'completed', 'cancelled']).optional(),
+  proposal_enabled: z.boolean().optional(),
 })
 
 export const joinTripSchema = z.object({

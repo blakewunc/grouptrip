@@ -5,7 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { AddItemDialog } from '@/components/itinerary/AddItemDialog'
 import { CommentSection } from '@/components/itinerary/CommentSection'
+import { SuggestActivityDialog } from '@/components/itinerary/SuggestActivityDialog'
+import { SuggestionList } from '@/components/itinerary/SuggestionList'
 import { useItinerary, type ItineraryItem } from '@/lib/hooks/useItinerary'
+import { useSuggestions } from '@/lib/hooks/useSuggestions'
 
 interface ItineraryTabProps {
   tripId: string
@@ -14,8 +17,9 @@ interface ItineraryTabProps {
   isOrganizer: boolean
 }
 
-export function ItineraryTab({ tripId, trip, currentUserId }: ItineraryTabProps) {
+export function ItineraryTab({ tripId, trip, currentUserId, isOrganizer }: ItineraryTabProps) {
   const { items, loading, error } = useItinerary(tripId)
+  const { suggestions, loading: suggestionsLoading } = useSuggestions(tripId)
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
 
   const handleDelete = async (itemId: string) => {
@@ -68,6 +72,8 @@ export function ItineraryTab({ tripId, trip, currentUserId }: ItineraryTabProps)
     )
   }
 
+  const pendingSuggestionCount = suggestions.filter((s) => s.status === 'pending').length
+
   return (
     <div>
       {/* Header */}
@@ -76,15 +82,47 @@ export function ItineraryTab({ tripId, trip, currentUserId }: ItineraryTabProps)
           <h2 className="text-2xl font-bold tracking-tight text-[#252323]">Itinerary</h2>
           <p className="text-[#A99985]">Plan your day-by-day schedule for {trip.title}</p>
         </div>
-        <AddItemDialog tripId={tripId} onSuccess={() => {}} />
+        <div className="flex items-center gap-2">
+          <SuggestActivityDialog tripId={tripId} />
+          {isOrganizer && <AddItemDialog tripId={tripId} onSuccess={() => {}} />}
+        </div>
       </div>
+
+      {/* Activity Suggestions Section */}
+      {(suggestions.length > 0 || !suggestionsLoading) && (
+        <div className="mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                Activity Suggestions
+                {pendingSuggestionCount > 0 && (
+                  <span className="inline-flex items-center rounded-full bg-yellow-50 px-2.5 py-0.5 text-xs font-medium text-yellow-700">
+                    {pendingSuggestionCount} pending
+                  </span>
+                )}
+              </CardTitle>
+              <CardDescription>
+                Members can suggest activities for the organizer to approve
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SuggestionList
+                suggestions={suggestions}
+                tripId={tripId}
+                isOrganizer={isOrganizer}
+                currentUserId={currentUserId}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Day-by-day itinerary */}
       {dates.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <p className="mb-4 text-[#A99985]">No activities planned yet</p>
-            <AddItemDialog tripId={tripId} onSuccess={() => {}} />
+            {isOrganizer && <AddItemDialog tripId={tripId} onSuccess={() => {}} />}
           </CardContent>
         </Card>
       ) : (
@@ -111,14 +149,16 @@ export function ItineraryTab({ tripId, trip, currentUserId }: ItineraryTabProps)
                             {item.location && <div>{'\u{1F4CD}'} {item.location}</div>}
                           </CardDescription>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(item.id)}
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
-                        >
-                          Delete
-                        </Button>
+                        {isOrganizer && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(item.id)}
+                            className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                          >
+                            Delete
+                          </Button>
+                        )}
                       </div>
                     </CardHeader>
                     <CardContent>

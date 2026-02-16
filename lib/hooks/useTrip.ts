@@ -11,6 +11,7 @@ interface TripMember {
   id: string
   role: string
   rsvp_status: string
+  budget_cap: number | null
   created_at: string
   profiles: Profile
 }
@@ -26,6 +27,7 @@ interface Trip {
   budget_total: number | null
   status: string
   invite_code: string
+  proposal_enabled: boolean
   created_at: string
   trip_members: TripMember[]
 }

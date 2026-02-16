@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { useBudget } from '@/lib/hooks/useBudget'
 import { AddCategoryDialog } from '@/components/budget/AddCategoryDialog'
 import { CategoryList } from '@/components/budget/CategoryList'
+import { BudgetCaps } from '@/components/budget/BudgetCaps'
 
 interface BudgetTabProps {
   tripId: string
@@ -44,7 +45,7 @@ export function BudgetTab({ tripId, trip, currentUserId, isOrganizer }: BudgetTa
       </div>
 
       {/* Budget Categories */}
-      <Card>
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle>Budget Categories</CardTitle>
           <CardDescription>
@@ -58,6 +59,24 @@ export function BudgetTab({ tripId, trip, currentUserId, isOrganizer }: BudgetTa
             memberCount={memberCount}
             isOrganizer={isOrganizer}
             onRefresh={() => {}}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Personal Budget Caps */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Budget Caps</CardTitle>
+          <CardDescription>
+            Personal spending limits for trip members
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <BudgetCaps
+            tripId={tripId}
+            members={trip.trip_members || []}
+            currentUserId={currentUserId}
+            isOrganizer={isOrganizer}
           />
         </CardContent>
       </Card>

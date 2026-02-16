@@ -1,6 +1,8 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MemberList } from '@/components/trips/MemberList'
@@ -15,10 +17,58 @@ interface OverviewTabProps {
 
 export function OverviewTab({ tripId, trip, currentUserId, isOrganizer }: OverviewTabProps) {
   const router = useRouter()
+  const [pendingInvites, setPendingInvites] = useState<any[]>([])
+  const [proposalEnabled, setProposalEnabled] = useState(trip.proposal_enabled || false)
+  const [togglingProposal, setTogglingProposal] = useState(false)
 
   const currentMember = trip.trip_members?.find(
     (member: any) => member.profiles.id === currentUserId
   )
+
+  const fetchPendingInvites = async () => {
+    try {
+      const response = await fetch(`/api/trips/${tripId}/members`)
+      if (response.ok) {
+        const data = await response.json()
+        setPendingInvites(data.pendingInvites || [])
+      }
+    } catch {
+      // Silently fail - not critical
+    }
+  }
+
+  useEffect(() => {
+    if (isOrganizer) {
+      fetchPendingInvites()
+    }
+  }, [tripId, isOrganizer])
+
+  const handleToggleProposal = async () => {
+    setTogglingProposal(true)
+    try {
+      const response = await fetch(`/api/trips/${tripId}/proposal`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proposal_enabled: !proposalEnabled }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Failed to toggle proposal')
+
+      setProposalEnabled(!proposalEnabled)
+      toast.success(proposalEnabled ? 'Proposal page disabled' : 'Proposal page enabled!')
+    } catch (error: any) {
+      toast.error(error.message)
+    } finally {
+      setTogglingProposal(false)
+    }
+  }
+
+  const copyProposalLink = () => {
+    const link = `${window.location.origin}/proposal/${trip.invite_code}`
+    navigator.clipboard.writeText(link)
+    toast.success('Proposal link copied!')
+  }
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
@@ -43,6 +93,41 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer }: Overvi
             currentStatus={currentMember.rsvp_status}
             onUpdate={() => {}}
           />
+        )}
+
+        {/* Trip Proposal - Organizer Only */}
+        {isOrganizer && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Trip Proposal</CardTitle>
+              <CardDescription>Share a beautiful proposal page with friends to pitch this trip</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[#252323]">
+                  {proposalEnabled ? 'Proposal page is live' : 'Proposal page is off'}
+                </span>
+                <button
+                  onClick={handleToggleProposal}
+                  disabled={togglingProposal}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    proposalEnabled ? 'bg-[#4A7C59]' : 'bg-[#DAD2BC]'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      proposalEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+              {proposalEnabled && (
+                <Button variant="outline" size="sm" onClick={copyProposalLink} className="w-full">
+                  Copy Proposal Link
+                </Button>
+              )}
+            </CardContent>
+          </Card>
         )}
 
         {/* Golf Module - Conditional */}
@@ -115,7 +200,15 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer }: Overvi
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <MemberList members={trip.trip_members || []} inviteCode={trip.invite_code} />
+            <MemberList
+              members={trip.trip_members || []}
+              inviteCode={trip.invite_code}
+              tripId={tripId}
+              isOrganizer={isOrganizer}
+              currentUserId={currentUserId}
+              pendingInvites={pendingInvites}
+              onRefresh={fetchPendingInvites}
+            />
           </CardContent>
         </Card>
       </div>
