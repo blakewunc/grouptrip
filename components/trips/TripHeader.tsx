@@ -47,18 +47,23 @@ export function TripHeader({ trip, isOrganizer }: TripHeaderProps) {
   }
 
   const formatDateRange = () => {
-    const start = new Date(trip.start_date)
-    const end = new Date(trip.end_date)
+    // Parse as local date to avoid timezone shift
+    const [sy, sm, sd] = trip.start_date.split('-').map(Number)
+    const [ey, em, ed] = trip.end_date.split('-').map(Number)
+    const start = new Date(sy, sm - 1, sd)
+    const end = new Date(ey, em - 1, ed)
 
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
+    const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
 
-    if (start.getFullYear() === end.getFullYear()) {
-      if (start.getMonth() === end.getMonth()) {
-        return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { day: 'numeric', year: 'numeric' })}`
-      }
-      return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', options)}`
-    }
-    return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`
+    const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    const endStr = start.getFullYear() === end.getFullYear()
+      ? end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    const startYear = start.getFullYear() !== end.getFullYear()
+      ? `, ${start.getFullYear()}`
+      : ''
+
+    return `${startStr}${startYear} - ${endStr} (${days} ${days === 1 ? 'day' : 'days'})`
   }
 
   const getStatusColor = (status: string) => {
