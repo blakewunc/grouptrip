@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { TripHeader } from '@/components/trips/TripHeader'
+import { TripHeroHeader } from '@/components/trips/TripHeroHeader'
 import { TripSwitcher } from '@/components/trips/TripSwitcher'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { OverviewTab } from '@/components/trips/tabs/OverviewTab'
@@ -37,7 +37,6 @@ function TripDetailContent({ tripId }: { tripId: string }) {
       url.searchParams.set('tab', value)
     }
     window.history.replaceState({}, '', url.toString())
-    // Force re-render by using router
     router.replace(`/trips/${tripId}${value === 'overview' ? '' : `?tab=${value}`}`, { scroll: false })
   }
 
@@ -52,7 +51,7 @@ function TripDetailContent({ tripId }: { tripId: string }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F1ED] p-6">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px]">
           <p className="text-[#A99985]">Loading trip...</p>
         </div>
       </div>
@@ -62,7 +61,7 @@ function TripDetailContent({ tripId }: { tripId: string }) {
   if (error || !trip) {
     return (
       <div className="min-h-screen bg-[#F5F1ED] p-6">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px]">
           <div className="rounded-lg bg-red-50 p-4 text-red-800">
             {error || 'Trip not found'}
           </div>
@@ -79,8 +78,8 @@ function TripDetailContent({ tripId }: { tripId: string }) {
   ))
 
   return (
-    <div className="min-h-screen bg-[#F5F1ED] p-6">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-screen bg-[#F5F1ED]">
+      <div className="mx-auto max-w-[1400px] px-6 py-6">
         {/* Trip Switcher */}
         <div className="mb-4">
           <TripSwitcher
@@ -92,12 +91,12 @@ function TripDetailContent({ tripId }: { tripId: string }) {
 
         {/* Hero Header */}
         <div className="mb-6">
-          <TripHeader trip={trip} isOrganizer={isOrganizer} />
+          <TripHeroHeader trip={trip} isOrganizer={isOrganizer} />
         </div>
 
         {/* Tabbed Interface */}
         <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsList className="mb-2 bg-white rounded-[5px] px-2 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+          <TabsList className="mb-6 bg-white rounded-[8px] px-2 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="budget">Budget</TabsTrigger>
             <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
@@ -112,6 +111,7 @@ function TripDetailContent({ tripId }: { tripId: string }) {
               trip={trip}
               currentUserId={currentUserId}
               isOrganizer={isOrganizer}
+              onSwitchTab={handleTabChange}
             />
           </TabsContent>
 
@@ -161,6 +161,17 @@ function TripDetailContent({ tripId }: { tripId: string }) {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => handleTabChange('itinerary')}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-[#4A7C59] px-6 py-3 text-sm font-semibold text-white shadow-[0_4px_12px_rgba(74,124,89,0.4)] transition-all hover:bg-[#3d6a4a] hover:shadow-[0_6px_16px_rgba(74,124,89,0.5)]"
+      >
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        Add Activity
+      </button>
     </div>
   )
 }
@@ -171,7 +182,7 @@ export default function TripDetailPage({ params }: { params: Promise<{ tripId: s
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#F5F1ED] p-6">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px]">
           <p className="text-[#A99985]">Loading trip...</p>
         </div>
       </div>
