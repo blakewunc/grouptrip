@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 // GET /api/proposal/[inviteCode] - Public proposal data (no auth required)
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ inviteCode: string }> }
 ) {
   try {
-    const supabase = await createClient()
+    const supabase = createServiceClient()
     const { inviteCode } = await params
 
     // Fetch trip by invite code
