@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { createClient } from '@/lib/supabase/client'
@@ -16,6 +17,7 @@ interface Equipment {
   needs_clubs: boolean
   needs_cart: boolean
   needs_push_cart: boolean
+  handicap: number | null
   notes: string | null
   user_name: string
 }
@@ -30,11 +32,8 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
 
   useEffect(() => {
     async function init() {
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser()
       setCurrentUserId(user?.id || null)
-
-      // Fetch equipment data
       await fetchEquipment()
     }
 
@@ -48,7 +47,6 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
         const data = await response.json()
         setEquipment(data.equipment || [])
 
-        // Find current user's equipment
         const { data: { user } } = await supabase.auth.getUser()
         if (user) {
           const mine = data.equipment?.find((e: Equipment) => e.user_id === user.id)
@@ -71,6 +69,7 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
       needs_clubs: formData.get('needs_clubs') === 'on',
       needs_cart: formData.get('needs_cart') === 'on',
       needs_push_cart: formData.get('needs_push_cart') === 'on',
+      handicap: formData.get('handicap') as string,
       notes: formData.get('notes') as string,
     }
 
@@ -97,11 +96,27 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
 
   return (
     <div className="space-y-6">
-      {/* My Equipment Needs */}
+      {/* My Golf Profile */}
       <div>
-        <h4 className="font-medium text-[#252323] mb-3">My Equipment Needs</h4>
+        <h4 className="font-medium text-[#252323] mb-3">My Golf Profile</h4>
         <form onSubmit={handleSave} className="space-y-4">
           <div className="space-y-2">
+            <Label htmlFor="handicap">Handicap</Label>
+            <Input
+              id="handicap"
+              name="handicap"
+              type="number"
+              min="0"
+              max="54"
+              placeholder="e.g., 15"
+              defaultValue={myEquipment?.handicap?.toString() || ''}
+              disabled={saving}
+            />
+            <p className="text-[11px] text-[#A99985]">Used for group assignments</p>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-[#252323]">Equipment Needs</p>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -145,7 +160,7 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
           </div>
 
           <Button type="submit" disabled={saving} className="w-full">
-            {saving ? 'Saving...' : 'Save Equipment Needs'}
+            {saving ? 'Saving...' : 'Save Golf Profile'}
           </Button>
         </form>
       </div>
@@ -160,7 +175,14 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
                 key={eq.id}
                 className="rounded-[5px] border border-[#DAD2BC] bg-white p-3"
               >
-                <p className="font-medium text-[#252323] mb-1">{eq.user_name}</p>
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-medium text-[#252323]">{eq.user_name}</p>
+                  {eq.handicap !== null && (
+                    <span className="rounded-full bg-[#4A7C59]/10 px-2 py-0.5 text-xs font-semibold text-[#4A7C59]">
+                      HCP {eq.handicap}
+                    </span>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-2 text-xs">
                   {eq.needs_clubs && (
                     <span className="rounded-full bg-[#F5F1ED] px-2 py-1 text-[#252323]">
@@ -177,8 +199,8 @@ export function EquipmentCoordination({ tripId }: EquipmentCoordinationProps) {
                       Push Cart
                     </span>
                   )}
-                  {!eq.needs_clubs && !eq.needs_cart && !eq.needs_push_cart && (
-                    <span className="text-[#A99985]">No rentals needed</span>
+                  {!eq.needs_clubs && !eq.needs_cart && !eq.needs_push_cart && eq.handicap === null && (
+                    <span className="text-[#A99985]">No info yet</span>
                   )}
                 </div>
                 {eq.notes && (

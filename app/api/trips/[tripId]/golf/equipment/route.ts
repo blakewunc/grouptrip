@@ -86,7 +86,7 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { needs_clubs, needs_cart, needs_push_cart, notes } = body
+    const { needs_clubs, needs_cart, needs_push_cart, notes, handicap } = body
 
     // Create equipment needs
     const { data: equipment, error } = await supabase
@@ -98,6 +98,7 @@ export async function POST(
         needs_cart,
         needs_push_cart,
         notes,
+        handicap: handicap !== undefined && handicap !== '' ? parseInt(handicap) : null,
       })
       .select()
       .single()
@@ -128,7 +129,7 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const { needs_clubs, needs_cart, needs_push_cart, notes } = body
+    const { needs_clubs, needs_cart, needs_push_cart, notes, handicap } = body
 
     // Update equipment needs (for current user)
     const { data: equipment, error } = await supabase
@@ -138,6 +139,7 @@ export async function PUT(
         needs_cart,
         needs_push_cart,
         notes,
+        handicap: handicap !== undefined && handicap !== '' ? parseInt(handicap) : null,
       })
       .eq('trip_id', tripId)
       .eq('user_id', user.id)

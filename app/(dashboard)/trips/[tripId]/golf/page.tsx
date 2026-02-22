@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { TeeTimeList } from '@/components/golf/TeeTimeList'
 import { EquipmentCoordination } from '@/components/golf/EquipmentCoordination'
 import { Leaderboard } from '@/components/golf/Leaderboard'
+import { GroupMaker } from '@/components/golf/GroupMaker'
 
 export default function GolfPage({ params }: { params: Promise<{ tripId: string }> }) {
   const { tripId } = use(params)
@@ -56,6 +57,17 @@ export default function GolfPage({ params }: { params: Promise<{ tripId: string 
 
           {/* Right Column */}
           <div className="space-y-6">
+            {/* Group Maker */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Group Maker</CardTitle>
+                <CardDescription>Assign foursomes by skill level</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <GroupMaker tripId={tripId} />
+              </CardContent>
+            </Card>
+
             {/* Leaderboard */}
             <Card>
               <CardHeader>
