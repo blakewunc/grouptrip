@@ -9,14 +9,30 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 
+interface Profile {
+  email: string
+  display_name: string
+  phone: string
+  handicap: number | null
+}
+
 export default function SettingsPage() {
   const router = useRouter()
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [profile, setProfile] = useState<{ email: string; display_name: string }>({
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [savingPassword, setSavingPassword] = useState(false)
+  const [savingGolf, setSavingGolf] = useState(false)
+  const [authProvider, setAuthProvider] = useState<string>('')
+  const [profile, setProfile] = useState<Profile>({
     email: '',
     display_name: '',
+    phone: '',
+    handicap: null,
+  })
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: '',
+    confirmPassword: '',
   })
 
   useEffect(() => {
@@ -28,17 +44,23 @@ export default function SettingsPage() {
           return
         }
 
-        const { data: profile, error } = await supabase
+        // Detect auth provider
+        const provider = user.app_metadata?.provider || 'email'
+        setAuthProvider(provider)
+
+        const { data: profileData, error } = await supabase
           .from('profiles')
-          .select('email, display_name')
+          .select('email, display_name, phone, handicap')
           .eq('id', user.id)
           .single()
 
         if (error) throw error
 
         setProfile({
-          email: profile?.email || user.email || '',
-          display_name: profile?.display_name || '',
+          email: profileData?.email || user.email || '',
+          display_name: profileData?.display_name || '',
+          phone: profileData?.phone || '',
+          handicap: profileData?.handicap ?? null,
         })
       } catch (error: any) {
         toast.error('Failed to load profile')
@@ -50,12 +72,9 @@ export default function SettingsPage() {
     loadProfile()
   }, [supabase, router])
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleProfileSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setSaving(true)
-
-    const formData = new FormData(e.currentTarget)
-    const display_name = formData.get('display_name') as string
+    setSavingProfile(true)
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
@@ -63,17 +82,76 @@ export default function SettingsPage() {
 
       const { error } = await supabase
         .from('profiles')
-        .update({ display_name })
+        .update({
+          display_name: profile.display_name,
+          phone: profile.phone || null,
+        })
         .eq('id', user.id)
 
       if (error) throw error
 
-      toast.success('Profile updated successfully')
-      setProfile({ ...profile, display_name })
+      toast.success('Profile updated')
     } catch (error: any) {
       toast.error(error.message || 'Failed to update profile')
     } finally {
-      setSaving(false)
+      setSavingProfile(false)
+    }
+  }
+
+  async function handlePasswordSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setSavingPassword(true)
+
+    if (passwordForm.newPassword.length < 6) {
+      toast.error('Password must be at least 6 characters')
+      setSavingPassword(false)
+      return
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error('Passwords do not match')
+      setSavingPassword(false)
+      return
+    }
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: passwordForm.newPassword,
+      })
+
+      if (error) throw error
+
+      toast.success('Password updated successfully')
+      setPasswordForm({ newPassword: '', confirmPassword: '' })
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update password')
+    } finally {
+      setSavingPassword(false)
+    }
+  }
+
+  async function handleGolfSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setSavingGolf(true)
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          handicap: profile.handicap,
+        })
+        .eq('id', user.id)
+
+      if (error) throw error
+
+      toast.success('Golf preferences saved')
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update golf preferences')
+    } finally {
+      setSavingGolf(false)
     }
   }
 
@@ -101,14 +179,14 @@ export default function SettingsPage() {
         </div>
 
         <div className="space-y-6">
-          {/* Profile Settings */}
+          {/* Profile Information */}
           <Card>
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
-              <CardDescription>Update your personal details</CardDescription>
+              <CardDescription>Your personal details visible to trip members</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleProfileSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -127,15 +205,114 @@ export default function SettingsPage() {
                   <Label htmlFor="display_name">Full Name</Label>
                   <Input
                     id="display_name"
-                    name="display_name"
-                    defaultValue={profile.display_name}
+                    value={profile.display_name}
+                    onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
                     placeholder="Enter your full name"
-                    disabled={saving}
+                    disabled={savingProfile}
                   />
                 </div>
 
-                <Button type="submit" disabled={saving} className="w-full">
-                  {saving ? 'Saving...' : 'Save Changes'}
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={profile.phone}
+                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    placeholder="(555) 123-4567"
+                    disabled={savingProfile}
+                  />
+                  <p className="text-xs text-[#A99985]">
+                    Optional - visible to trip organizers
+                  </p>
+                </div>
+
+                <Button type="submit" disabled={savingProfile} className="w-full">
+                  {savingProfile ? 'Saving...' : 'Save Profile'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Password Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Password</CardTitle>
+              <CardDescription>
+                {authProvider === 'google'
+                  ? 'You signed in with Google. Set a password to also enable email/password login.'
+                  : 'Update your password'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                  <Input
+                    id="newPassword"
+                    type="password"
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                    placeholder="At least 6 characters"
+                    disabled={savingPassword}
+                    minLength={6}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                    placeholder="Confirm your new password"
+                    disabled={savingPassword}
+                    minLength={6}
+                    required
+                  />
+                </div>
+
+                <Button type="submit" disabled={savingPassword} className="w-full">
+                  {savingPassword ? 'Updating...' : 'Update Password'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Golf Preferences */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Golf Preferences</CardTitle>
+              <CardDescription>Your default golf profile used across all trips</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleGolfSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="handicap">Handicap Index</Label>
+                  <Input
+                    id="handicap"
+                    type="number"
+                    min={0}
+                    max={54}
+                    value={profile.handicap !== null ? profile.handicap : ''}
+                    onChange={(e) =>
+                      setProfile({
+                        ...profile,
+                        handicap: e.target.value !== '' ? parseInt(e.target.value) : null,
+                      })
+                    }
+                    placeholder="e.g. 12"
+                    disabled={savingGolf}
+                  />
+                  <p className="text-xs text-[#A99985]">
+                    0 = scratch golfer, 54 = maximum. Used for group assignments on golf trips.
+                  </p>
+                </div>
+
+                <Button type="submit" disabled={savingGolf} className="w-full">
+                  {savingGolf ? 'Saving...' : 'Save Golf Preferences'}
                 </Button>
               </form>
             </CardContent>
@@ -145,14 +322,13 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Account</CardTitle>
-              <CardDescription>Manage your account settings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium text-[#252323]">Sign Out</p>
                   <p className="text-sm text-[#A99985]">
-                    Sign out of your account
+                    Sign out of your account on this device
                   </p>
                 </div>
                 <Button variant="outline" onClick={handleSignOut}>
