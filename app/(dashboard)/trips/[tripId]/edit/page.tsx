@@ -36,6 +36,7 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
     description: '',
     budget_total: '',
     status: 'planning',
+    trip_type: 'general',
   })
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
           description: data.trip.description || '',
           budget_total: data.trip.budget_total?.toString() || '',
           status: data.trip.status,
+          trip_type: data.trip.trip_type || 'general',
         })
       } catch (err: any) {
         setError(err.message)
@@ -80,6 +82,7 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
         start_date: formData.start_date,
         end_date: formData.end_date,
         status: formData.status,
+        trip_type: formData.trip_type,
       }
 
       if (formData.description) {
@@ -170,6 +173,26 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
                   required
                   disabled={submitting}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="trip_type">Trip Type</Label>
+                <select
+                  id="trip_type"
+                  value={formData.trip_type}
+                  onChange={(e) => setFormData({ ...formData, trip_type: e.target.value })}
+                  disabled={submitting}
+                  className="flex h-11 w-full rounded-[5px] border border-[#CEC5B0] bg-white px-4 py-2.5 text-base text-[#252323] transition-all duration-200 focus:border-[#70798C] focus:outline-none focus:ring-2 focus:ring-[#70798C] focus:ring-opacity-15 disabled:cursor-not-allowed disabled:opacity-40 disabled:bg-[#F5F1ED]"
+                >
+                  <option value="general">General Trip</option>
+                  <option value="golf">Golf Trip</option>
+                  <option value="ski">Ski Trip</option>
+                  <option value="bachelor_party">Bachelor Party</option>
+                  <option value="bachelorette_party">Bachelorette Party</option>
+                </select>
+                <p className="text-xs text-[#A99985]">
+                  Golf and ski trips include sport-specific features
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
