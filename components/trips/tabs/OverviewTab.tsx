@@ -3,13 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import { RsvpStatus } from '@/components/trips/RsvpStatus'
-import { TripProgressCard } from '@/components/trips/overview/TripProgressCard'
-import { ItineraryPreviewCard } from '@/components/trips/overview/ItineraryPreviewCard'
 import { BudgetSnapshotCard } from '@/components/trips/overview/BudgetSnapshotCard'
 import { TripMembersCard } from '@/components/trips/overview/TripMembersCard'
-import { AvailabilitySummaryCard } from '@/components/trips/overview/AvailabilitySummaryCard'
 import { AnnouncementsCard } from '@/components/trips/overview/AnnouncementsCard'
 import { useBudget } from '@/lib/hooks/useBudget'
 import { useItinerary } from '@/lib/hooks/useItinerary'
@@ -80,81 +75,167 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitch
     toast.success('Proposal link copied!')
   }
 
-  // Compute progress data
+  // Compute stats
   const respondedCount = members.filter((m: any) => m.rsvp_status === 'accepted' || m.rsvp_status === 'declined' || m.rsvp_status === 'maybe').length
   const budgetTotal = categories.reduce((sum: number, c: any) => sum + (c.estimated_cost || 0), 0)
   const perPerson = memberCount > 0 ? budgetTotal / memberCount : 0
   const currentBudgetCap = currentMember?.budget_cap || null
 
-  // Group itinerary by date for preview
-  const itineraryByDate = itineraryItems.reduce((acc: any, item: any) => {
-    if (!acc[item.date]) acc[item.date] = []
-    acc[item.date].push(item)
-    return acc
-  }, {} as Record<string, any[]>)
+  // Get upcoming activities (next 3 from today)
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const upcomingItems = itineraryItems
+    .filter((item: any) => {
+      const [y, m, d] = item.date.split('-').map(Number)
+      return new Date(y, m - 1, d) >= now
+    })
+    .sort((a: any, b: any) => {
+      const cmp = a.date.localeCompare(b.date)
+      if (cmp !== 0) return cmp
+      return (a.time || '').localeCompare(b.time || '')
+    })
+    .slice(0, 3)
 
-  const itineraryDays = Object.keys(itineraryByDate)
-    .sort()
-    .map((date) => ({
-      date,
-      items: itineraryByDate[date].sort((a: any, b: any) => (a.time || '').localeCompare(b.time || '')),
-    }))
+  // Progress stats
+  const rsvpDone = respondedCount === memberCount && memberCount > 0
+  const budgetDone = categories.length >= 1
+  const activitiesDone = itineraryItems.length >= 1
+  const progressParts = [rsvpDone, budgetDone, activitiesDone, availabilityCount > 0]
+  const progressPercent = Math.round((progressParts.filter(Boolean).length / progressParts.length) * 100)
+
+  const formatDate = (dateStr: string) => {
+    const [y, m, d] = dateStr.split('-').map(Number)
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+
+  const formatTime = (time: string) => {
+    const [h, m] = time.split(':').map(Number)
+    const ampm = h >= 12 ? 'PM' : 'AM'
+    const hour = h % 12 || 12
+    return `${hour}:${m.toString().padStart(2, '0')} ${ampm}`
+  }
 
   return (
     <div className="space-y-6">
-      {/* RSVP Status */}
-      {currentMember && (
-        <RsvpStatus
-          tripId={trip.id}
-          currentStatus={currentMember.rsvp_status}
-          onUpdate={() => {}}
-        />
-      )}
+      {/* Progress Line */}
+      <div className="flex items-center gap-3 rounded-[8px] border border-[#DAD2BC] bg-white px-5 py-3 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#F5F1ED]">
+          <div
+            className="h-full rounded-full bg-[#4A7C59] transition-all duration-500"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+        <span className="text-sm font-semibold text-[#4A7C59]">{progressPercent}%</span>
+        <span className="hidden text-xs text-[#A99985] sm:inline">
+          {respondedCount}/{memberCount} responded
+          {categories.length > 0 && ` · ${categories.length} budget categories`}
+          {itineraryItems.length > 0 && ` · ${itineraryItems.length} activities`}
+        </span>
+      </div>
 
-      {/* Main 2-column Dashboard */}
+      {/* 2-Column Dashboard */}
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         {/* Left Column */}
         <div className="space-y-6">
-          {/* Trip Progress */}
-          <TripProgressCard
-            membersRespondedCount={respondedCount}
-            membersTotalCount={memberCount}
-            budgetCategoriesCount={categories.length}
-            activitiesPlannedCount={itineraryItems.length}
-            availabilitySubmittedCount={availabilityCount}
-            onViewItinerary={() => onSwitchTab('itinerary')}
-          />
+          {/* What's Next */}
+          <div className="rounded-[8px] border border-[#DAD2BC] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-[#252323]">What's Next</h3>
+              {itineraryItems.length > 0 && (
+                <button
+                  onClick={() => onSwitchTab('itinerary')}
+                  className="text-sm font-medium text-[#70798C] transition-colors hover:text-[#252323]"
+                >
+                  View All
+                </button>
+              )}
+            </div>
 
-          {/* Itinerary + Budget side by side */}
-          <div className="grid gap-6 sm:grid-cols-2">
-            <ItineraryPreviewCard
-              days={itineraryDays}
-              onViewFull={() => onSwitchTab('itinerary')}
-              onAddActivity={() => onSwitchTab('itinerary')}
-            />
-            <BudgetSnapshotCard
-              totalEstimated={budgetTotal}
-              perPerson={perPerson}
-              memberCount={memberCount}
-              budgetCap={currentBudgetCap}
-              onViewBudget={() => onSwitchTab('budget')}
-              onAddCategory={() => onSwitchTab('budget')}
-            />
+            {upcomingItems.length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="mb-3 text-sm text-[#A99985]">
+                  {itineraryItems.length === 0
+                    ? 'No activities planned yet'
+                    : 'All activities are in the past'}
+                </p>
+                <button
+                  onClick={() => onSwitchTab('itinerary')}
+                  className="inline-flex items-center gap-1.5 rounded-[5px] border border-[#DAD2BC] px-4 py-2 text-sm font-medium text-[#252323] transition-colors hover:bg-[#F5F1ED]"
+                >
+                  {itineraryItems.length === 0 ? 'Add your first activity' : 'View Itinerary'}
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {upcomingItems.map((item: any, i: number) => (
+                  <div key={item.id} className="flex items-start gap-3">
+                    {/* Timeline dot + line */}
+                    <div className="flex flex-col items-center">
+                      <div className={`h-2.5 w-2.5 rounded-full ${i === 0 ? 'bg-[#4A7C59]' : 'bg-[#DAD2BC]'}`} />
+                      {i < upcomingItems.length - 1 && (
+                        <div className="mt-1 h-8 w-px bg-[#DAD2BC]" />
+                      )}
+                    </div>
+
+                    <div className="min-w-0 flex-1 pb-2">
+                      <p className="text-sm font-medium text-[#252323]">{item.title}</p>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-3 text-xs text-[#A99985]">
+                        <span>{formatDate(item.date)}</span>
+                        {item.time && <span>{formatTime(item.time)}</span>}
+                        {item.location && <span>{item.location}</span>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Trip Proposal - Organizer Only */}
+          {/* Announcements */}
+          <AnnouncementsCard tripId={tripId} isOrganizer={isOrganizer} />
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-6">
+          {/* Budget at a Glance */}
+          <BudgetSnapshotCard
+            totalEstimated={budgetTotal}
+            perPerson={perPerson}
+            memberCount={memberCount}
+            budgetCap={currentBudgetCap}
+            onViewBudget={() => onSwitchTab('budget')}
+            onAddCategory={() => onSwitchTab('budget')}
+          />
+
+          {/* Members */}
+          <TripMembersCard
+            members={members}
+            inviteCode={trip.invite_code}
+            tripId={tripId}
+            tripTitle={trip.title}
+            isOrganizer={isOrganizer}
+          />
+
+          {/* Organizer Tools */}
           {isOrganizer && (
             <div className="rounded-[8px] border border-[#DAD2BC] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+              <h3 className="mb-4 text-lg font-semibold text-[#252323]">Organizer Tools</h3>
+
+              {/* Trip Proposal Toggle */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-semibold text-[#252323]">Trip Proposal</h3>
-                  <p className="text-sm text-[#A99985]">Share a proposal page with friends</p>
+                  <p className="text-sm font-medium text-[#252323]">Trip Proposal</p>
+                  <p className="text-xs text-[#A99985]">Share a proposal page with friends</p>
                 </div>
                 <div className="flex items-center gap-3">
                   {proposalEnabled && (
                     <button
                       onClick={copyProposalLink}
-                      className="text-sm font-medium text-[#70798C] transition-colors hover:text-[#252323]"
+                      className="text-xs font-medium text-[#70798C] transition-colors hover:text-[#252323]"
                     >
                       Copy Link
                     </button>
@@ -174,65 +255,28 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitch
                   </button>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Sport Module Links */}
-          {trip.trip_type === 'golf' && (
-            <div className="rounded-[8px] border border-[#70798C] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{'\u26F3'}</span>
+              {/* Availability */}
+              <div className="mt-4 border-t border-[#F5F1ED] pt-4">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-base font-semibold text-[#252323]">Golf Module</h3>
-                    <p className="text-sm text-[#A99985]">Tee times, scorecards, and equipment</p>
+                    <p className="text-sm font-medium text-[#252323]">Availability</p>
+                    <p className="text-xs text-[#A99985]">
+                      {availabilityCount > 0
+                        ? `${availabilityCount} of ${memberCount} submitted`
+                        : 'No submissions yet'}
+                    </p>
                   </div>
+                  <button
+                    onClick={() => router.push(`/trips/${tripId}/availability`)}
+                    className="text-xs font-medium text-[#70798C] transition-colors hover:text-[#252323]"
+                  >
+                    View
+                  </button>
                 </div>
-                <Button onClick={() => router.push(`/trips/${tripId}/golf`)} size="sm">
-                  Manage
-                </Button>
               </div>
             </div>
           )}
-
-          {trip.trip_type === 'ski' && (
-            <div className="rounded-[8px] border border-[#70798C] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{'\u26F7\uFE0F'}</span>
-                  <div>
-                    <h3 className="text-base font-semibold text-[#252323]">Ski Module</h3>
-                    <p className="text-sm text-[#A99985]">Lift tickets, abilities, and rentals</p>
-                  </div>
-                </div>
-                <Button onClick={() => router.push(`/trips/${tripId}/ski`)} size="sm">
-                  Manage
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-6">
-          <TripMembersCard
-            members={members}
-            inviteCode={trip.invite_code}
-            tripId={tripId}
-            tripTitle={trip.title}
-            isOrganizer={isOrganizer}
-          />
-
-          <AvailabilitySummaryCard
-            tripId={tripId}
-            memberCount={memberCount}
-            onViewCalendar={() => router.push(`/trips/${tripId}/availability`)}
-          />
-
-          <AnnouncementsCard
-            tripId={tripId}
-            isOrganizer={isOrganizer}
-          />
         </div>
       </div>
     </div>
