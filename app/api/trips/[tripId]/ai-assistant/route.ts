@@ -1,12 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import Anthropic from '@anthropic-ai/sdk'
 
 // Allow up to 60s for streaming AI responses (default is 10s on Vercel)
 export const maxDuration = 60
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-})
 
 export async function POST(
   request: Request,
@@ -36,6 +31,11 @@ export async function POST(
 
     if (!message || typeof message !== 'string') {
       return new Response(JSON.stringify({ error: 'Message is required' }), { status: 400 })
+    }
+
+    const apiKey = process.env.ANTHROPIC_API_KEY
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: 'AI service not configured' }), { status: 500 })
     }
 
     // Fetch trip context in parallel
@@ -75,23 +75,65 @@ export async function POST(
       { role: 'user' as const, content: message },
     ]
 
-    const stream = anthropic.messages.stream({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 2048,
-      system: systemPrompt,
-      messages,
+    // Call Anthropic API directly via fetch (avoids SDK bundling issues on Vercel)
+    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 2048,
+        stream: true,
+        system: systemPrompt,
+        messages,
+      }),
     })
 
+    if (!anthropicResponse.ok) {
+      const errText = await anthropicResponse.text()
+      console.error('Anthropic API error:', anthropicResponse.status, errText)
+      return new Response(
+        JSON.stringify({ error: `AI service error: ${anthropicResponse.status}` }),
+        { status: 502 }
+      )
+    }
+
+    // Pipe the SSE stream, extracting text deltas
     const encoder = new TextEncoder()
+    const decoder = new TextDecoder()
+    const reader = anthropicResponse.body!.getReader()
+
     const readableStream = new ReadableStream({
       async start(controller) {
+        let buffer = ''
         try {
-          for await (const event of stream) {
-            if (
-              event.type === 'content_block_delta' &&
-              event.delta.type === 'text_delta'
-            ) {
-              controller.enqueue(encoder.encode(event.delta.text))
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+
+            buffer += decoder.decode(value, { stream: true })
+            const lines = buffer.split('\n')
+            buffer = lines.pop() || ''
+
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue
+              const data = line.slice(6)
+              if (data === '[DONE]') continue
+
+              try {
+                const event = JSON.parse(data)
+                if (
+                  event.type === 'content_block_delta' &&
+                  event.delta?.type === 'text_delta'
+                ) {
+                  controller.enqueue(encoder.encode(event.delta.text))
+                }
+              } catch {
+                // skip malformed JSON
+              }
             }
           }
           controller.close()
