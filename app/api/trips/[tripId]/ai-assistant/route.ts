@@ -95,8 +95,15 @@ export async function POST(
     if (!anthropicResponse.ok) {
       const errText = await anthropicResponse.text()
       console.error('Anthropic API error:', anthropicResponse.status, errText)
+      let detail = `AI service error ${anthropicResponse.status}`
+      try {
+        const errJson = JSON.parse(errText)
+        detail = errJson.error?.message || detail
+      } catch {
+        detail = errText || detail
+      }
       return new Response(
-        JSON.stringify({ error: `AI service error: ${anthropicResponse.status}` }),
+        JSON.stringify({ error: detail }),
         { status: 502 }
       )
     }
