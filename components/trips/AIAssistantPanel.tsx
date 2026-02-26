@@ -86,7 +86,14 @@ export function AIAssistantPanel({
       })
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response')
+        let errorMsg = `Error ${response.status}`
+        try {
+          const errData = await response.json()
+          errorMsg = errData.error || errorMsg
+        } catch {
+          errorMsg = await response.text() || errorMsg
+        }
+        throw new Error(errorMsg)
       }
 
       const reader = response.body!.getReader()
@@ -104,11 +111,13 @@ export function AIAssistantPanel({
           prev.map((m) => (m.id === assistantId ? { ...m, content: fullText } : m))
         )
       }
-    } catch {
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Unknown error'
+      console.error('AI assistant error:', errorMessage)
       setMessages((prev) =>
         prev.map((m) =>
           m.id === assistantId
-            ? { ...m, content: 'Sorry, I encountered an error. Please try again.' }
+            ? { ...m, content: `Sorry, something went wrong: ${errorMessage}` }
             : m
         )
       )
