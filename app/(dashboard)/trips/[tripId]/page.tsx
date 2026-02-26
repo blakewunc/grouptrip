@@ -12,6 +12,7 @@ import { ItineraryTab } from '@/components/trips/tabs/ItineraryTab'
 import { ExpensesTab } from '@/components/trips/tabs/ExpensesTab'
 import { SuppliesTab } from '@/components/trips/tabs/SuppliesTab'
 import { AccommodationTab } from '@/components/trips/tabs/AccommodationTab'
+import { AIAssistantPanel } from '@/components/trips/AIAssistantPanel'
 import { createClient } from '@/lib/supabase/client'
 import { useTrip } from '@/lib/hooks/useTrip'
 import { Suspense } from 'react'
@@ -25,6 +26,7 @@ function TripDetailContent({ tripId }: { tripId: string }) {
   const supabase = createClient()
   const { trip, loading, error } = useTrip(tripId)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [aiPanelOpen, setAiPanelOpen] = useState(false)
 
   const tabParam = searchParams.get('tab') as TabValue | null
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'overview'
@@ -162,16 +164,39 @@ function TripDetailContent({ tripId }: { tripId: string }) {
         </Tabs>
       </div>
 
-      {/* Floating Action Button */}
-      <button
-        onClick={() => handleTabChange('itinerary')}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-[#4A7C59] px-6 py-3 text-sm font-semibold text-white shadow-[0_4px_12px_rgba(74,124,89,0.4)] transition-all hover:bg-[#3d6a4a] hover:shadow-[0_6px_16px_rgba(74,124,89,0.5)]"
-      >
-        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-        Add Activity
-      </button>
+      {/* Floating Action Buttons */}
+      {!aiPanelOpen && (
+        <div className="fixed bottom-6 right-6 z-30 flex flex-col gap-3">
+          <button
+            onClick={() => setAiPanelOpen(true)}
+            className="flex items-center gap-2 rounded-full bg-[#70798C] px-5 py-3 text-sm font-semibold text-white shadow-[0_4px_12px_rgba(112,121,140,0.4)] transition-all hover:bg-[#5A6270] hover:shadow-[0_6px_16px_rgba(112,121,140,0.5)]"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+            </svg>
+            AI Planner
+          </button>
+          <button
+            onClick={() => handleTabChange('itinerary')}
+            className="flex items-center gap-2 rounded-full bg-[#4A7C59] px-6 py-3 text-sm font-semibold text-white shadow-[0_4px_12px_rgba(74,124,89,0.4)] transition-all hover:bg-[#3d6a4a] hover:shadow-[0_6px_16px_rgba(74,124,89,0.5)]"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Activity
+          </button>
+        </div>
+      )}
+
+      {/* AI Assistant Panel */}
+      <AIAssistantPanel
+        tripId={tripId}
+        tripTitle={trip.title}
+        tripDestination={trip.destination}
+        tripType={trip.trip_type}
+        open={aiPanelOpen}
+        onClose={() => setAiPanelOpen(false)}
+      />
     </div>
   )
 }
