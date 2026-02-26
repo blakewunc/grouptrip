@@ -86,12 +86,13 @@ export function AIAssistantPanel({
       })
 
       if (!response.ok) {
+        const text = await response.text()
         let errorMsg = `Error ${response.status}`
         try {
-          const errData = await response.json()
+          const errData = JSON.parse(text)
           errorMsg = errData.error || errorMsg
         } catch {
-          errorMsg = await response.text() || errorMsg
+          errorMsg = text || errorMsg
         }
         throw new Error(errorMsg)
       }
