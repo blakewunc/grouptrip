@@ -68,7 +68,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { title, destination, start_date, end_date, description, budget_total } = validation.data
+    const { title, destination, start_date, end_date, description, budget_total, expected_guests } = validation.data
 
     // Generate invite code
     const invite_code = generateInviteCode()
@@ -83,6 +83,7 @@ export async function POST(request: Request) {
         end_date,
         description,
         budget_total,
+        expected_guests,
         created_by: user.id,
         invite_code,
         status: 'planning',

@@ -10,6 +10,7 @@ export const createTripSchema = z.object({
   end_date: z.string(),
   description: z.string().max(1000, 'Description must be less than 1000 characters').optional(),
   budget_total: z.number().min(0).optional(),
+  expected_guests: z.number().int().min(1).max(500).optional(),
 }).refine((data) => {
   const start = new Date(data.start_date)
   const end = new Date(data.end_date)
@@ -26,6 +27,7 @@ export const updateTripSchema = z.object({
   end_date: z.string().optional(),
   description: z.string().max(1000, 'Description must be less than 1000 characters').optional(),
   budget_total: z.number().min(0).optional(),
+  expected_guests: z.number().int().min(1).max(500).optional(),
   status: z.enum(['planning', 'confirmed', 'completed', 'cancelled']).optional(),
   trip_type: z.enum(['general', 'golf', 'ski', 'bachelor_party', 'bachelorette_party']).optional(),
   proposal_enabled: z.boolean().optional(),

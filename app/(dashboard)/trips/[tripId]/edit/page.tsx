@@ -17,6 +17,7 @@ interface Trip {
   end_date: string
   description: string | null
   budget_total: number | null
+  expected_guests: number | null
   status: string
 }
 
@@ -35,6 +36,7 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
     end_date: '',
     description: '',
     budget_total: '',
+    expected_guests: '',
     status: 'planning',
     trip_type: 'general',
   })
@@ -57,6 +59,7 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
           end_date: data.trip.end_date,
           description: data.trip.description || '',
           budget_total: data.trip.budget_total?.toString() || '',
+          expected_guests: data.trip.expected_guests?.toString() || '',
           status: data.trip.status,
           trip_type: data.trip.trip_type || 'general',
         })
@@ -91,6 +94,10 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
 
       if (formData.budget_total) {
         updateData.budget_total = parseFloat(formData.budget_total)
+      }
+
+      if (formData.expected_guests) {
+        updateData.expected_guests = parseInt(formData.expected_guests)
       }
 
       const response = await fetch(`/api/trips/${tripId}`, {
@@ -221,17 +228,33 @@ export default function EditTripPage({ params }: { params: Promise<{ tripId: str
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="budget_total">Estimated Budget (optional)</Label>
-                <Input
-                  id="budget_total"
-                  type="number"
-                  step="0.01"
-                  value={formData.budget_total}
-                  onChange={(e) => setFormData({ ...formData, budget_total: e.target.value })}
-                  placeholder="2500"
-                  disabled={submitting}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="expected_guests">Expected Guests</Label>
+                  <Input
+                    id="expected_guests"
+                    type="number"
+                    min="1"
+                    max="500"
+                    value={formData.expected_guests}
+                    onChange={(e) => setFormData({ ...formData, expected_guests: e.target.value })}
+                    placeholder="e.g., 8"
+                    disabled={submitting}
+                  />
+                  <p className="text-xs text-[#A99985]">Used to calculate cost per person</p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="budget_total">Estimated Budget (optional)</Label>
+                  <Input
+                    id="budget_total"
+                    type="number"
+                    step="0.01"
+                    value={formData.budget_total}
+                    onChange={(e) => setFormData({ ...formData, budget_total: e.target.value })}
+                    placeholder="2500"
+                    disabled={submitting}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">

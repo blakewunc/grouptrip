@@ -32,6 +32,9 @@ export default function NewTripPage() {
       budget_total: formData.get('budget_total')
         ? parseFloat(formData.get('budget_total') as string)
         : undefined,
+      expected_guests: formData.get('expected_guests')
+        ? parseInt(formData.get('expected_guests') as string)
+        : undefined,
     }
 
     try {
@@ -144,17 +147,33 @@ export default function NewTripPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="budget_total">Estimated Total Budget (optional)</Label>
-                <Input
-                  id="budget_total"
-                  name="budget_total"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="e.g., 5000"
-                  disabled={loading}
-                />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="expected_guests">Expected Guests*</Label>
+                  <Input
+                    id="expected_guests"
+                    name="expected_guests"
+                    type="number"
+                    min="1"
+                    max="500"
+                    placeholder="e.g., 8"
+                    required
+                    disabled={loading}
+                  />
+                  <p className="text-xs text-[#A99985]">Used to calculate cost per person</p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="budget_total">Estimated Total Budget (optional)</Label>
+                  <Input
+                    id="budget_total"
+                    name="budget_total"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="e.g., 5000"
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">

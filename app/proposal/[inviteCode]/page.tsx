@@ -18,6 +18,7 @@ interface ProposalData {
     invite_code: string
     member_count: number
     accepted_count: number
+    expected_guests: number | null
   }
   categories: Array<{
     id: string
@@ -121,7 +122,8 @@ export default function ProposalPage() {
   const { trip, categories, itinerary } = data
 
   const totalBudget = categories.reduce((sum, cat) => sum + (cat.estimated_cost || 0), 0)
-  const perPerson = trip.member_count > 0 ? totalBudget / trip.member_count : totalBudget
+  const guestCount = trip.expected_guests || trip.member_count || 1
+  const perPerson = totalBudget / guestCount
   const isGolf = trip.trip_type === 'golf'
 
   const formatDate = (dateStr: string) => {
@@ -217,9 +219,9 @@ export default function ProposalPage() {
             </div>
             <div className="rounded-[5px] border border-[#DAD2BC] bg-white p-5 text-center shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
               <p className="text-2xl font-bold text-[#252323]">
-                {trip.member_count}
+                {guestCount}
               </p>
-              <p className="mt-1 text-xs text-[#A99985]">People</p>
+              <p className="mt-1 text-xs text-[#A99985]">{trip.expected_guests ? 'Expected' : 'People'}</p>
             </div>
           </div>
 

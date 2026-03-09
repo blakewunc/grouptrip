@@ -78,7 +78,8 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitch
   // Compute stats
   const respondedCount = members.filter((m: any) => m.rsvp_status === 'accepted' || m.rsvp_status === 'declined' || m.rsvp_status === 'maybe').length
   const budgetTotal = categories.reduce((sum: number, c: any) => sum + (c.estimated_cost || 0), 0)
-  const perPerson = memberCount > 0 ? budgetTotal / memberCount : 0
+  const guestCount = trip.expected_guests || memberCount || 1
+  const perPerson = budgetTotal / guestCount
   const currentBudgetCap = currentMember?.budget_cap || null
 
   // Get upcoming activities (next 3 from today)
