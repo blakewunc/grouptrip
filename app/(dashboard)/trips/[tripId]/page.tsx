@@ -14,6 +14,7 @@ import { SuppliesTab } from '@/components/trips/tabs/SuppliesTab'
 import { AccommodationTab } from '@/components/trips/tabs/AccommodationTab'
 import { GolfTab } from '@/components/trips/tabs/GolfTab'
 import { SkiTab } from '@/components/trips/tabs/SkiTab'
+import { AvailabilityTab } from '@/components/trips/tabs/AvailabilityTab'
 import { AIAssistantPanel } from '@/components/trips/AIAssistantPanel'
 import { createClient } from '@/lib/supabase/client'
 import { useTrip } from '@/lib/hooks/useTrip'
@@ -25,9 +26,10 @@ import {
   Receipt,
   Package,
   BedDouble,
+  Users,
 } from 'lucide-react'
 
-const BASE_TABS = ['overview', 'budget', 'itinerary', 'expenses', 'supplies', 'accommodation'] as const
+const BASE_TABS = ['overview', 'budget', 'itinerary', 'expenses', 'supplies', 'accommodation', 'availability'] as const
 
 function TripDetailContent({ tripId }: { tripId: string }) {
   const router = useRouter()
@@ -142,6 +144,10 @@ function TripDetailContent({ tripId }: { tripId: string }) {
               <BedDouble className="mr-1.5 h-3.5 w-3.5" />
               Accommodation
             </TabsTrigger>
+            <TabsTrigger value="availability">
+              <Users className="mr-1.5 h-3.5 w-3.5" />
+              Availability
+            </TabsTrigger>
             {trip.trip_type === 'golf' && (
               <TabsTrigger value="golf">
                 <span className="mr-1.5 text-sm">&#x26F3;</span>
@@ -204,6 +210,15 @@ function TripDetailContent({ tripId }: { tripId: string }) {
 
           <TabsContent value="accommodation">
             <AccommodationTab
+              tripId={tripId}
+              trip={trip}
+              currentUserId={currentUserId}
+              isOrganizer={isOrganizer}
+            />
+          </TabsContent>
+
+          <TabsContent value="availability">
+            <AvailabilityTab
               tripId={tripId}
               trip={trip}
               currentUserId={currentUserId}

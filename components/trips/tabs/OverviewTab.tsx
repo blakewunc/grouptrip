@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { BudgetSnapshotCard } from '@/components/trips/overview/BudgetSnapshotCard'
 import { TripMembersCard } from '@/components/trips/overview/TripMembersCard'
@@ -18,7 +17,6 @@ interface OverviewTabProps {
 }
 
 export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitchTab }: OverviewTabProps) {
-  const router = useRouter()
   const [proposalEnabled, setProposalEnabled] = useState(trip.proposal_enabled || false)
   const [togglingProposal, setTogglingProposal] = useState(false)
   const [availabilityCount, setAvailabilityCount] = useState(0)
@@ -206,7 +204,6 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitch
           <BudgetSnapshotCard
             totalEstimated={budgetTotal}
             perPerson={perPerson}
-            memberCount={memberCount}
             budgetCap={currentBudgetCap}
             onViewBudget={() => onSwitchTab('budget')}
             onAddCategory={() => onSwitchTab('budget')}
@@ -269,7 +266,7 @@ export function OverviewTab({ tripId, trip, currentUserId, isOrganizer, onSwitch
                     </p>
                   </div>
                   <button
-                    onClick={() => router.push(`/trips/${tripId}/availability`)}
+                    onClick={() => onSwitchTab('availability')}
                     className="text-xs font-medium text-[#70798C] transition-colors hover:text-[#252323]"
                   >
                     View

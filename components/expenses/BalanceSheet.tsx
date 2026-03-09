@@ -126,7 +126,7 @@ export function BalanceSheet({ expenses, members, currentUserId, tripTitle }: Ba
                     key={index}
                     className={`rounded-lg border-2 p-4 ${
                       isCurrentUserInvolved
-                        ? 'border-[#70798C] bg-pink-50'
+                        ? 'border-[#70798C] bg-[#F5F1ED]'
                         : 'border-[#DAD2BC] bg-white'
                     }`}
                   >

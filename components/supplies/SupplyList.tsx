@@ -129,7 +129,7 @@ export function SupplyList({
                       supply.status === 'packed'
                         ? 'border-green-200 bg-green-50 opacity-75'
                         : supply.claimed_by === currentUserId
-                        ? 'border-[#70798C] bg-pink-50'
+                        ? 'border-[#70798C] bg-[#F5F1ED]'
                         : 'border-[#DAD2BC] bg-white'
                     }`}
                   >

@@ -156,7 +156,7 @@ export default function PaymentSettingsPage() {
 
               {/* Preview */}
               {(formData.venmo_handle || formData.zelle_email || formData.cashapp_handle) && (
-                <div className="rounded-lg border-2 border-[#70798C] bg-pink-50 p-4">
+                <div className="rounded-[5px] border-2 border-[#70798C] bg-[#F5F1ED] p-4">
                   <p className="mb-2 text-sm font-semibold text-[#252323]">Preview:</p>
                   <div className="space-y-1 text-sm text-[#A99985]">
                     {formData.venmo_handle && (

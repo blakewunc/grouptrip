@@ -3,7 +3,6 @@
 interface BudgetSnapshotCardProps {
   totalEstimated: number
   perPerson: number
-  memberCount: number
   budgetCap?: number | null
   onViewBudget: () => void
   onAddCategory: () => void
@@ -12,7 +11,6 @@ interface BudgetSnapshotCardProps {
 export function BudgetSnapshotCard({
   totalEstimated,
   perPerson,
-  memberCount,
   budgetCap,
   onViewBudget,
   onAddCategory,
@@ -76,7 +74,7 @@ export function BudgetSnapshotCard({
             onClick={onViewBudget}
             className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-[#70798C] transition-colors hover:text-[#252323]"
           >
-            View Calendar
+            View full budget
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
