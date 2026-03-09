@@ -6,6 +6,8 @@ export interface BrandConfig {
   tagline: string
   description: string
   defaultTripType: string | null
+  domain: string
+  otherBrand: BrandId
 }
 
 export const brands: Record<BrandId, BrandConfig> = {
@@ -15,6 +17,8 @@ export const brands: Record<BrandId, BrandConfig> = {
     tagline: 'Plan unforgettable group adventures with ease',
     description: 'Collaborative trip planning for groups. Itineraries, budgets, and expenses — all in one place.',
     defaultTripType: null,
+    domain: 'https://grouptrip-mu.vercel.app',
+    otherBrand: 'backNine',
   },
   backNine: {
     id: 'backNine',
@@ -22,6 +26,8 @@ export const brands: Record<BrandId, BrandConfig> = {
     tagline: 'Plan your next golf trip with the boys',
     description: 'Tee times, scorecards, expenses, and itineraries for your golf crew.',
     defaultTripType: 'golf',
+    domain: 'https://thebacknine.app',
+    otherBrand: 'groupTrip',
   },
 }
 
