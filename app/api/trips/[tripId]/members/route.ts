@@ -113,8 +113,9 @@ export async function POST(
         return NextResponse.json({ error: 'User is already a member of this trip' }, { status: 409 })
       }
 
-      // Add as member directly
-      const { data: member, error: insertError } = await supabase
+      // Add as member directly — use service client to bypass RLS
+      // (INSERT policy only allows user_id = auth.uid(), not organizer inserting others)
+      const { data: member, error: insertError } = await serviceClient
         .from('trip_members')
         .insert({
           trip_id: tripId,
