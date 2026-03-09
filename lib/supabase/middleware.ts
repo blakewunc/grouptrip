@@ -45,14 +45,17 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages
+  // Preserve ?next= param so invite/proposal flows complete correctly
   if (
     user &&
     (request.nextUrl.pathname === '/login' ||
       request.nextUrl.pathname === '/signup' ||
       request.nextUrl.pathname === '/forgot-password')
   ) {
+    const next = request.nextUrl.searchParams.get('next') || '/trips'
     const url = request.nextUrl.clone()
-    url.pathname = '/trips'
+    url.pathname = next
+    url.search = ''
     return NextResponse.redirect(url)
   }
 

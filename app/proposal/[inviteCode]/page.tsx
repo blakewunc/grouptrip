@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { createClient } from '@/lib/supabase/client'
 
 interface ProposalData {
   trip: {
@@ -150,7 +151,15 @@ export default function ProposalPage() {
 
   const dates = Object.keys(itineraryByDate).sort()
 
-  const handleJoin = () => router.push(`/login?next=/invite/${inviteCode}`)
+  const handleJoin = async () => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      router.push(`/invite/${inviteCode}`)
+    } else {
+      router.push(`/login?next=/invite/${inviteCode}`)
+    }
+  }
 
   const brandName = isGolf ? 'The Back Nine' : 'GroupTrip'
 
