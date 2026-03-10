@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 type DocumentCategory = 'accommodation' | 'reservation' | 'activity' | 'flight' | 'other'
+type TransportType = 'carpool' | 'flight' | 'train' | 'other'
 
 interface TripDocument {
   id: string
@@ -21,6 +23,22 @@ interface TripDocument {
   }
 }
 
+interface TransportEntry {
+  id: string
+  type: TransportType
+  departure_time: string | null
+  departure_location: string | null
+  arrival_time: string | null
+  arrival_location: string | null
+  seats_available: number | null
+  notes: string | null
+  created_by: string
+  profiles?: {
+    display_name: string | null
+    email: string
+  }
+}
+
 interface AccommodationTabProps {
   tripId: string
   trip: any
@@ -28,11 +46,19 @@ interface AccommodationTabProps {
   isOrganizer: boolean
 }
 
-export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: AccommodationTabProps) {
+const transportTypeLabels: Record<TransportType, string> = {
+  carpool: '🚗 Carpool',
+  flight: '✈️ Flight',
+  train: '🚂 Train',
+  other: '🚌 Other',
+}
+
+export function AccommodationTab({ tripId, currentUserId, isOrganizer }: AccommodationTabProps) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [accommodation, setAccommodation] = useState<any>(null)
   const [documents, setDocuments] = useState<TripDocument[]>([])
+  const [transportation, setTransportation] = useState<TransportEntry[]>([])
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -51,6 +77,17 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
     category: 'other' as DocumentCategory
   })
   const [showDocForm, setShowDocForm] = useState(false)
+  const [showTransportForm, setShowTransportForm] = useState(false)
+  const [newTransport, setNewTransport] = useState({
+    type: 'carpool' as TransportType,
+    departure_time: '',
+    departure_location: '',
+    arrival_time: '',
+    arrival_location: '',
+    seats_available: '',
+    notes: '',
+  })
+  const [addingTransport, setAddingTransport] = useState(false)
 
   useEffect(() => {
     if (tripId) fetchData()
@@ -59,7 +96,12 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
   async function fetchData() {
     setLoading(true)
     try {
-      const accRes = await fetch(`/api/trips/${tripId}/accommodation`)
+      const [accRes, docsRes, transRes] = await Promise.all([
+        fetch(`/api/trips/${tripId}/accommodation`),
+        fetch(`/api/trips/${tripId}/documents`),
+        fetch(`/api/trips/${tripId}/transportation`),
+      ])
+
       if (accRes.ok) {
         const accData = await accRes.json()
         if (accData.accommodation) {
@@ -78,10 +120,14 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
         }
       }
 
-      const docsRes = await fetch(`/api/trips/${tripId}/documents`)
       if (docsRes.ok) {
         const docsData = await docsRes.json()
         setDocuments(docsData.documents || [])
+      }
+
+      if (transRes.ok) {
+        const transData = await transRes.json()
+        setTransportation(transData.transportation || [])
       }
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -90,7 +136,7 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
     }
   }
 
-  async function handleSaveAccommodation(e: React.FormEvent) {
+  async function handleSaveAccommodation(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     setSaving(true)
     try {
@@ -104,15 +150,15 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
 
       const data = await response.json()
       setAccommodation(data.accommodation)
-      alert('Accommodation details saved!')
+      toast.success('Accommodation details saved!')
     } catch (error: any) {
-      alert(error.message)
+      toast.error(error.message)
     } finally {
       setSaving(false)
     }
   }
 
-  async function handleAddDocument(e: React.FormEvent) {
+  async function handleAddDocument(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     try {
       const response = await fetch(`/api/trips/${tripId}/documents`, {
@@ -126,8 +172,9 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
       setNewDoc({ title: '', url: '', description: '', category: 'other' })
       setShowDocForm(false)
       fetchData()
+      toast.success('Link added!')
     } catch (error: any) {
-      alert(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -135,24 +182,73 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
     if (!confirm('Delete this link?')) return
 
     try {
-      const response = await fetch(`/api/trips/${tripId}/documents/${docId}`, {
-        method: 'DELETE',
-      })
-
+      const response = await fetch(`/api/trips/${tripId}/documents/${docId}`, { method: 'DELETE' })
       if (!response.ok) throw new Error('Failed to delete document')
-
       fetchData()
+      toast.success('Link removed')
     } catch (error: any) {
-      alert(error.message)
+      toast.error(error.message)
     }
   }
 
+  async function handleAddTransport(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setAddingTransport(true)
+    try {
+      const response = await fetch(`/api/trips/${tripId}/transportation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTransport),
+      })
+
+      if (!response.ok) throw new Error('Failed to add transportation')
+
+      setNewTransport({
+        type: 'carpool',
+        departure_time: '',
+        departure_location: '',
+        arrival_time: '',
+        arrival_location: '',
+        seats_available: '',
+        notes: '',
+      })
+      setShowTransportForm(false)
+      fetchData()
+      toast.success('Transportation added!')
+    } catch (error: any) {
+      toast.error(error.message)
+    } finally {
+      setAddingTransport(false)
+    }
+  }
+
+  async function handleDeleteTransport(transportId: string) {
+    if (!confirm('Remove this transportation entry?')) return
+
+    try {
+      const response = await fetch(`/api/trips/${tripId}/transportation/${transportId}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Failed to delete')
+      fetchData()
+      toast.success('Entry removed')
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
+  const formatDateTime = (dt: string | null) => {
+    if (!dt) return null
+    return new Date(dt).toLocaleString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit', hour12: true,
+    })
+  }
+
   const categoryLabels: Record<DocumentCategory, string> = {
-    accommodation: '\u{1F3E0} Accommodation',
-    reservation: '\u{1F37D}\uFE0F Reservation',
-    activity: '\u26F3 Activity',
-    flight: '\u2708\uFE0F Flight',
-    other: '\u{1F4C4} Other'
+    accommodation: '🏠 Accommodation',
+    reservation: '🍽️ Reservation',
+    activity: '⛳ Activity',
+    flight: '✈️ Flight',
+    other: '📄 Other'
   }
 
   if (loading) {
@@ -163,12 +259,13 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold tracking-tight text-[#252323]">Accommodation & Logistics</h2>
-        <p className="text-[#A99985]">Manage where you&apos;re staying and important trip documents</p>
+        <p className="text-[#A99985]">Manage where you&apos;re staying and how everyone&apos;s getting there</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Left Column - Accommodation Details */}
-        <div>
+        {/* Left Column */}
+        <div className="space-y-6">
+          {/* Accommodation Details */}
           <Card>
             <CardHeader>
               <CardTitle>Accommodation Details</CardTitle>
@@ -291,10 +388,10 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
                   )}
                   {(accommodation.check_in || accommodation.check_out) && (
                     <div>
-                      <p className="font-semibold text-[#252323]">Check-in/Check-out</p>
+                      <p className="font-semibold text-[#252323]">Check-in / Check-out</p>
                       <p className="text-[#A99985]">
                         {accommodation.check_in && new Date(accommodation.check_in).toLocaleString()}
-                        {' \u2192 '}
+                        {' → '}
                         {accommodation.check_out && new Date(accommodation.check_out).toLocaleString()}
                       </p>
                     </div>
@@ -334,6 +431,161 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
               )}
             </CardContent>
           </Card>
+
+          {/* Transportation */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Transportation</CardTitle>
+                  <CardDescription>Carpools, flights, and how everyone&apos;s getting there</CardDescription>
+                </div>
+                {!showTransportForm && (
+                  <Button size="sm" onClick={() => setShowTransportForm(true)}>
+                    + Add
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent>
+              {showTransportForm && (
+                <form onSubmit={handleAddTransport} className="mb-6 space-y-3 rounded-[8px] border border-[#DAD2BC] bg-[#F5F1ED] p-4">
+                  <div>
+                    <Label htmlFor="trans_type">Type</Label>
+                    <select
+                      id="trans_type"
+                      value={newTransport.type}
+                      onChange={(e) => setNewTransport({ ...newTransport, type: e.target.value as TransportType })}
+                      className="flex h-10 w-full rounded-[5px] border border-[#DAD2BC] bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="carpool">🚗 Carpool</option>
+                      <option value="flight">✈️ Flight</option>
+                      <option value="train">🚂 Train</option>
+                      <option value="other">🚌 Other</option>
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="trans_dep_loc">Departing from</Label>
+                      <Input
+                        id="trans_dep_loc"
+                        value={newTransport.departure_location}
+                        onChange={(e) => setNewTransport({ ...newTransport, departure_location: e.target.value })}
+                        placeholder="Airport, city, address"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="trans_dep_time">Departure time</Label>
+                      <Input
+                        id="trans_dep_time"
+                        type="datetime-local"
+                        value={newTransport.departure_time}
+                        onChange={(e) => setNewTransport({ ...newTransport, departure_time: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="trans_arr_loc">Arriving at</Label>
+                      <Input
+                        id="trans_arr_loc"
+                        value={newTransport.arrival_location}
+                        onChange={(e) => setNewTransport({ ...newTransport, arrival_location: e.target.value })}
+                        placeholder="Airport, city, address"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="trans_arr_time">Arrival time</Label>
+                      <Input
+                        id="trans_arr_time"
+                        type="datetime-local"
+                        value={newTransport.arrival_time}
+                        onChange={(e) => setNewTransport({ ...newTransport, arrival_time: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="trans_seats">Seats available</Label>
+                      <Input
+                        id="trans_seats"
+                        type="number"
+                        min="0"
+                        value={newTransport.seats_available}
+                        onChange={(e) => setNewTransport({ ...newTransport, seats_available: e.target.value })}
+                        placeholder="e.g. 3"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="trans_notes">Notes</Label>
+                      <Input
+                        id="trans_notes"
+                        value={newTransport.notes}
+                        onChange={(e) => setNewTransport({ ...newTransport, notes: e.target.value })}
+                        placeholder="Flight number, rental co., etc."
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button type="submit" size="sm" disabled={addingTransport}>
+                      {addingTransport ? 'Adding...' : 'Add Entry'}
+                    </Button>
+                    <Button type="button" size="sm" variant="secondary" onClick={() => setShowTransportForm(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {transportation.length === 0 ? (
+                <p className="py-6 text-center text-sm text-[#A99985]">
+                  No transportation added yet. Add flights, carpools, or other details.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {transportation.map((entry) => (
+                    <div key={entry.id} className="rounded-[5px] border border-[#DAD2BC] p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-[#252323]">{transportTypeLabels[entry.type]}</p>
+                          {(entry.departure_location || entry.arrival_location) && (
+                            <p className="mt-0.5 text-xs text-[#A99985]">
+                              {entry.departure_location && <span>{entry.departure_location}</span>}
+                              {entry.departure_location && entry.arrival_location && <span> → </span>}
+                              {entry.arrival_location && <span>{entry.arrival_location}</span>}
+                            </p>
+                          )}
+                          {entry.departure_time && (
+                            <p className="mt-0.5 text-xs text-[#A99985]">
+                              Departs: {formatDateTime(entry.departure_time)}
+                              {entry.arrival_time && ` · Arrives: ${formatDateTime(entry.arrival_time)}`}
+                            </p>
+                          )}
+                          {entry.seats_available != null && (
+                            <p className="mt-0.5 text-xs text-[#A99985]">{entry.seats_available} seat{entry.seats_available !== 1 ? 's' : ''} available</p>
+                          )}
+                          {entry.notes && (
+                            <p className="mt-0.5 text-xs text-[#70798C]">{entry.notes}</p>
+                          )}
+                          <p className="mt-1 text-xs text-[#DAD2BC]">
+                            Added by {(entry.profiles as any)?.display_name || (entry.profiles as any)?.email || 'someone'}
+                          </p>
+                        </div>
+                        {(entry.created_by === currentUserId || isOrganizer) && (
+                          <button
+                            onClick={() => handleDeleteTransport(entry.id)}
+                            className="shrink-0 text-xs text-[#A99985] transition-colors hover:text-[#8B4444]"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Column - Documents & Links */}
@@ -354,7 +606,7 @@ export function AccommodationTab({ tripId, trip, currentUserId, isOrganizer }: A
             </CardHeader>
             <CardContent>
               {showDocForm && (
-                <form onSubmit={handleAddDocument} className="mb-6 space-y-3 rounded-[5px] border-2 border-[#70798C] bg-[#F5F1ED] p-4">
+                <form onSubmit={handleAddDocument} className="mb-6 space-y-3 rounded-[8px] border border-[#DAD2BC] bg-[#F5F1ED] p-4">
                   <div>
                     <Label htmlFor="doc_title">Title *</Label>
                     <Input

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Sparkles, ChevronLeft, Pencil, Trash2, MoreHorizontal, Share2 } from 'lucide-react'
+import { Sparkles, ChevronLeft, Pencil, Trash2, MoreHorizontal, Share2, FileText } from 'lucide-react'
 
 interface TripDetailHeaderProps {
   trip: {
@@ -149,6 +149,13 @@ export function TripDetailHeader({ trip, isOrganizer, onOpenAI }: TripDetailHead
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
                     <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-[5px] border border-[#DAD2BC] bg-white py-1 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+                      <button
+                        onClick={() => { setShowMenu(false); router.push(`/trips/${trip.id}/snapshot`) }}
+                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-[#252323] transition-colors hover:bg-[#F5F1ED]"
+                      >
+                        <FileText className="h-3.5 w-3.5" />
+                        View Trip Brief
+                      </button>
                       <button
                         onClick={copyRecapLink}
                         className="flex w-full items-center gap-2 px-4 py-2 text-sm text-[#252323] transition-colors hover:bg-[#F5F1ED]"
