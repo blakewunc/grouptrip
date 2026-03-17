@@ -5,7 +5,8 @@
 Collaborative trip planning SaaS with two brands on a single codebase:
 
 - **GroupTrip** (`grouptrip-mu.vercel.app`) — general group trips: bachelor parties, bachelorette parties, ski trips
-- **The Starter** (`thestarter.app`) — golf-focused brand with ad monetization, pitched separately to golfers
+- **The Starter** (`www.thestarter.app`) — golf-focused brand with ad monetization, pitched separately to golfers
+- **The Back Nine** (`www.thebacknine.app`) — alias for The Starter; middleware 301-redirects all thebacknine.app traffic to thestarter.app
 
 **Current priority:** The Starter golf experience.
 
@@ -17,7 +18,7 @@ Collaborative trip planning SaaS with two brands on a single codebase:
 - **Auth:** Supabase Auth (email/password, magic link, Google OAuth)
 - **Real-time:** Supabase Realtime subscriptions
 - **AI:** Anthropic Claude API for trip planning assistant
-- **Hosting:** Vercel with custom domains
+- **Hosting:** Vercel with custom domains (`grouptrip-mu.vercel.app`, `www.thestarter.app`, `www.thebacknine.app`)
 - **Ads:** Google AdSense (The Starter only)
 
 ## Architecture
