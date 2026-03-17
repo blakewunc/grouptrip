@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useBrand } from '@/lib/BrandProvider'
+import { StarterLogo } from '@/components/StarterLogo'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -49,18 +50,17 @@ export function Navbar() {
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
             {isBackNine ? (
-              <svg className="h-8 w-8 text-[#8ECC7A]" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M16 2v18M16 20c0 0-6 2-6 6h12c0-4-6-6-6-6z" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M16 2l8 5-8 5V2z" fill="currentColor" stroke="none" />
-              </svg>
+              <div className="rounded-[5px] bg-white px-2 py-1">
+                <StarterLogo className="h-9 w-auto" />
+              </div>
             ) : (
-              <svg className="h-8 w-8 text-[#70798C]" viewBox="0 0 32 32" fill="currentColor">
-                <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28C9.373 28 4 22.627 4 16S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12zm-2-20v12l10 6-10-18z"/>
-              </svg>
+              <>
+                <svg className="h-8 w-8 text-[#70798C]" viewBox="0 0 32 32" fill="currentColor">
+                  <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28C9.373 28 4 22.627 4 16S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12zm-2-20v12l10 6-10-18z"/>
+                </svg>
+                <span className="text-xl font-bold text-[#252323]">{brand.name}</span>
+              </>
             )}
-            <span className={`text-xl font-bold ${isBackNine ? 'text-white' : 'text-[#252323]'}`}>
-              {brand.name}
-            </span>
           </Link>
 
           {/* Right side actions */}
