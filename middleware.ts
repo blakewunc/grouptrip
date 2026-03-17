@@ -2,12 +2,21 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from './lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-  // Detect brand from hostname (thebacknine.app and thestarter.app both serve the golf brand)
+  // Detect brand from hostname
   const host = request.headers.get('host') || ''
-  const isStarter = host.includes('thestarter') || host.includes('thebacknine')
+  const isBackNine = host.includes('thebacknine')
+  const isStarter = host.includes('thestarter') || isBackNine
   const brand = isStarter ? 'starter' : 'groupTrip'
 
-  // Rewrite root path to golf landing page for The Starter / Back Nine domains
+  // Permanently redirect thebacknine.app → thestarter.app
+  if (isBackNine) {
+    const url = request.nextUrl.clone()
+    url.host = 'thestarter.app'
+    url.port = ''
+    return NextResponse.redirect(url, { status: 301 })
+  }
+
+  // Rewrite root path to golf landing page for The Starter domain
   if (isStarter && request.nextUrl.pathname === '/') {
     const url = request.nextUrl.clone()
     url.pathname = '/starter'
