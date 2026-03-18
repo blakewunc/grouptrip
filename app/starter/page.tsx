@@ -51,7 +51,7 @@ export default function StarterLanding() {
         {/* Logo */}
         <div className="mb-8 flex justify-center">
           <div className="rounded-[8px] bg-white px-6 py-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
-            <StarterLogo className="h-28 w-auto" />
+            <StarterLogo className="h-28 w-auto" variant="main" />
           </div>
         </div>
         <h1 className="mb-4 text-xl font-semibold text-[#8ECC7A]">

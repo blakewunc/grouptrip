@@ -69,16 +69,19 @@ export default async function BlogPostPage(
         </header>
 
         {/* Content */}
-        <div className="prose prose-neutral max-w-none
+        <div className="prose prose-stone max-w-none
           prose-headings:font-semibold prose-headings:text-[#252323] prose-headings:tracking-tight
-          prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
-          prose-h3:text-base prose-h3:mt-6 prose-h3:mb-2
-          prose-p:text-[#252323] prose-p:leading-relaxed prose-p:mb-4
+          prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-[#DAD2BC] prose-h2:pb-2
+          prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
+          prose-p:text-[#252323] prose-p:leading-7
           prose-li:text-[#252323] prose-li:leading-relaxed
+          prose-ul:my-4 prose-ol:my-4
           prose-strong:text-[#252323] prose-strong:font-semibold
           prose-a:text-[#4A7C59] prose-a:no-underline hover:prose-a:underline
-          prose-hr:border-[#DAD2BC] prose-hr:my-8
-          prose-blockquote:border-l-[#70798C] prose-blockquote:text-[#A99985]
+          prose-hr:border-[#DAD2BC] prose-hr:my-10
+          prose-blockquote:border-l-[#70798C] prose-blockquote:text-[#A99985] prose-blockquote:not-italic
+          prose-table:text-sm prose-th:text-[#252323] prose-td:text-[#252323]
+          prose-code:text-[#252323] prose-code:bg-[#F5F1ED] prose-code:px-1 prose-code:rounded
         ">
           <MDXRemote source={post.content} />
         </div>
