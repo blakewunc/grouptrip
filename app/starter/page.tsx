@@ -5,7 +5,7 @@ import { StarterLogo } from '@/components/StarterLogo'
 
 export const metadata: Metadata = {
   title: 'The Starter — Golf Trip Planner for Your Crew',
-  description: 'Plan your golf trip with the boys. Tee times, scorecards, expense splitting, group availability, and full itineraries — everything your golf crew needs in one place.',
+  description: 'Plan your golf trip with your crew. Tee times, scorecards, expense splitting, group availability, and full itineraries — everything your golf crew needs in one place.',
   keywords: ['golf trip planner', 'golf group planner', 'tee time planner', 'golf scorecard app', 'golf trip organizer', 'golf vacation planner'],
   openGraph: {
     title: 'The Starter — Golf Trip Planner for Your Crew',
@@ -54,9 +54,9 @@ export default function StarterLanding() {
             <StarterLogo className="h-28 w-auto" />
           </div>
         </div>
-        <p className="mb-4 text-xl text-[#8ECC7A]">
+        <h1 className="mb-4 text-xl font-semibold text-[#8ECC7A]">
           Plan your next golf trip with your crew
-        </p>
+        </h1>
         <p className="mb-10 text-base text-[#B8D4C4]">
           Tee times, scorecards, expense splitting, and full itineraries — everything your crew needs in one place.
         </p>

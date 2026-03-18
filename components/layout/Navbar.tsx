@@ -228,33 +228,46 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile navigation (only show when authenticated) */}
-      {user && (
-        <div className={`border-t md:hidden ${isBackNine ? 'border-[#B8D4C4]/20' : 'border-[#DAD2BC]'}`}>
-          <div className="space-y-1 px-6 py-4">
+      {/* Mobile navigation */}
+      <div className={`border-t md:hidden ${isBackNine ? 'border-[#B8D4C4]/20' : 'border-[#DAD2BC]'}`}>
+        <div className="space-y-1 px-6 py-4">
+          {user ? (
+            <>
+              <Link
+                href="/trips"
+                className={`block rounded-[5px] px-4 py-2.5 text-sm font-medium transition-colors ${
+                  isActive('/trips')
+                    ? isBackNine ? 'bg-white/10 text-white' : 'bg-[#F5F1ED] text-[#252323]'
+                    : isBackNine ? 'text-[#B8D4C4] hover:bg-white/10 hover:text-white' : 'text-[#A99985] hover:bg-[#F5F1ED] hover:text-[#252323]'
+                }`}
+              >
+                {isBackNine ? 'My Golf Trips' : 'My Trips'}
+              </Link>
+              <Link
+                href="/trips/new"
+                className={`block rounded-[5px] px-4 py-2.5 text-sm font-medium transition-colors ${
+                  isActive('/trips/new')
+                    ? isBackNine ? 'bg-white/10 text-white' : 'bg-[#F5F1ED] text-[#252323]'
+                    : isBackNine ? 'text-[#B8D4C4] hover:bg-white/10 hover:text-white' : 'text-[#A99985] hover:bg-[#F5F1ED] hover:text-[#252323]'
+                }`}
+              >
+                {isBackNine ? 'Plan a Trip' : 'Create Trip'}
+              </Link>
+            </>
+          ) : (
             <Link
-              href="/trips"
+              href="/blog"
               className={`block rounded-[5px] px-4 py-2.5 text-sm font-medium transition-colors ${
-                isActive('/trips')
+                isActive('/blog')
                   ? isBackNine ? 'bg-white/10 text-white' : 'bg-[#F5F1ED] text-[#252323]'
                   : isBackNine ? 'text-[#B8D4C4] hover:bg-white/10 hover:text-white' : 'text-[#A99985] hover:bg-[#F5F1ED] hover:text-[#252323]'
               }`}
             >
-              {isBackNine ? 'My Golf Trips' : 'My Trips'}
+              {isBackNine ? 'Golf Trip Guides' : 'Blog'}
             </Link>
-            <Link
-              href="/trips/new"
-              className={`block rounded-[5px] px-4 py-2.5 text-sm font-medium transition-colors ${
-                isActive('/trips/new')
-                  ? isBackNine ? 'bg-white/10 text-white' : 'bg-[#F5F1ED] text-[#252323]'
-                  : isBackNine ? 'text-[#B8D4C4] hover:bg-white/10 hover:text-white' : 'text-[#A99985] hover:bg-[#F5F1ED] hover:text-[#252323]'
-              }`}
-            >
-              {isBackNine ? 'Plan a Trip' : 'Create Trip'}
-            </Link>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   )
 }

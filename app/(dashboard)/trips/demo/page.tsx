@@ -122,7 +122,7 @@ export default function DemoTripPage() {
         <div>
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#70798C]">Expenses</h2>
           <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-[8px] border-2 border-[#70798C] bg-white p-4 text-center shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
+            <div className="rounded-[5px] border-2 border-[#70798C] bg-white p-4 text-center shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
               <p className="text-3xl font-bold text-[#70798C]">${DEMO_TRIP.totalPerPerson.toLocaleString()}</p>
               <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#A99985]">Per Person</p>
             </div>

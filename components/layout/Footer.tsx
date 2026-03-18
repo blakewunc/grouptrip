@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useBrand } from '@/lib/BrandProvider'
 import { brands } from '@/lib/brand'
 import { AdSlot } from '@/components/ads/AdSlot'
+import { StarterLogo } from '@/components/StarterLogo'
 
 export function Footer() {
   const brand = useBrand()
@@ -21,18 +22,19 @@ export function Footer() {
           <div className="max-w-xs">
             <div className="flex items-center gap-2">
               {isBackNine ? (
-                <svg className="h-6 w-6 text-[#8ECC7A]" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M16 2v18M16 20c0 0-6 2-6 6h12c0-4-6-6-6-6z" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M16 2l8 5-8 5V2z" fill="currentColor" stroke="none" />
-                </svg>
+                <div className="rounded-[4px] bg-white px-2 py-1">
+                  <StarterLogo className="h-7 w-auto" />
+                </div>
               ) : (
-                <svg className="h-6 w-6 text-[#70798C]" viewBox="0 0 32 32" fill="currentColor">
-                  <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28C9.373 28 4 22.627 4 16S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12zm-2-20v12l10 6-10-18z" />
-                </svg>
+                <>
+                  <svg className="h-6 w-6 text-[#70798C]" viewBox="0 0 32 32" fill="currentColor">
+                    <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28C9.373 28 4 22.627 4 16S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12zm-2-20v12l10 6-10-18z" />
+                  </svg>
+                  <span className="text-lg font-bold text-[#252323]">
+                    {brand.name}
+                  </span>
+                </>
               )}
-              <span className={`text-lg font-bold ${isBackNine ? 'text-white' : 'text-[#252323]'}`}>
-                {brand.name}
-              </span>
             </div>
             <p className={`mt-2 text-sm ${isBackNine ? 'text-[#B8D4C4]' : 'text-[#A99985]'}`}>
               {brand.description}
