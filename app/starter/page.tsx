@@ -62,7 +62,7 @@ export default function StarterLanding() {
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link href="/signup">
             <Button size="lg" className="w-full bg-[#12733C] text-white hover:bg-[#0B442D] sm:w-auto px-10">
-              Get Started Free
+              Get Started
             </Button>
           </Link>
           <Link href="/trips/demo" className="text-sm text-[#8ECC7A] underline-offset-2 hover:underline">

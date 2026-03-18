@@ -16,19 +16,6 @@ export async function middleware(request: NextRequest) {
     return response
   }
 
-  // TEMPORARILY redirect auth pages to landing for The Starter during AdSense review
-  if (isBackNine && (
-    request.nextUrl.pathname === '/login' ||
-    request.nextUrl.pathname === '/signup' ||
-    request.nextUrl.pathname === '/forgot-password'
-  )) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/starter'
-    const response = NextResponse.redirect(url)
-    response.headers.set('x-brand', brand)
-    return response
-  }
-
   // Set brand header and pass through to Supabase session handler
   request.headers.set('x-brand', brand)
   const response = await updateSession(request)
