@@ -50,9 +50,7 @@ export default function StarterLanding() {
       <main className="mx-auto max-w-3xl text-center">
         {/* Logo */}
         <div className="mb-8 flex justify-center">
-          <div className="rounded-[8px] bg-white px-4 py-3 shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
-            <StarterLogo className="h-40 w-auto max-w-xs" variant="main" />
-          </div>
+          <StarterLogo className="h-56 w-auto" variant="main" />
         </div>
         <h1 className="mb-4 text-xl font-semibold text-[#8ECC7A]">
           Plan your next golf trip with your crew

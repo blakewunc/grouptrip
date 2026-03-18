@@ -22,9 +22,7 @@ export function Footer() {
           <div className="max-w-xs">
             <div className="flex items-center gap-2">
               {isBackNine ? (
-                <div className="rounded-[4px] bg-white px-2 py-1.5">
-                  <StarterLogo className="h-9 w-auto" />
-                </div>
+                <StarterLogo className="h-10 w-auto" />
               ) : (
                 <>
                   <svg className="h-6 w-6 text-[#70798C]" viewBox="0 0 32 32" fill="currentColor">
