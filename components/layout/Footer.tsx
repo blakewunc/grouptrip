@@ -22,8 +22,8 @@ export function Footer() {
           <div className="max-w-xs">
             <div className="flex items-center gap-2">
               {isBackNine ? (
-                <div className="rounded-[4px] bg-white px-2 py-1">
-                  <StarterLogo className="h-7 w-auto" />
+                <div className="rounded-[4px] bg-white px-2 py-1.5">
+                  <StarterLogo className="h-9 w-auto" />
                 </div>
               ) : (
                 <>

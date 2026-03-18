@@ -76,8 +76,8 @@ export function Navbar() {
               aria-haspopup="true"
             >
               {isBackNine ? (
-                <div className="rounded-[5px] bg-white px-2 py-1">
-                  <StarterLogo className="h-9 w-auto" />
+                <div className="rounded-[5px] bg-white px-2 py-1.5">
+                  <StarterLogo className="h-10 w-auto" />
                 </div>
               ) : (
                 <>
