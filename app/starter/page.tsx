@@ -855,7 +855,7 @@ export default function StarterLanding() {
                   <span className="sl-trip-tag">Fall Classic</span>
                   <h3 className="sl-trip-name">Pinehurst<br />No. 2 &amp; Beyond</h3>
                   <p className="sl-trip-meta">3 nights · 3 rounds · NC Sandhills</p>
-                  <Link href="/trips/new" className="sl-trip-cta">Plan this trip</Link>
+                  <Link href="/trips/curated/pinehurst" className="sl-trip-cta">Plan this trip</Link>
                 </div>
               </div>
 
