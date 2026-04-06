@@ -750,10 +750,10 @@ export default function StarterLanding() {
 
               <div className="sl-step sl-reveal sl-reveal-d1">
                 <div className="sl-step-img">
-                  {/* Aerial view of a golf course — fairways and greens from above */}
+                  {/* Golf course — fairways, landscape */}
                   <img
-                    src="https://images.unsplash.com/photo-1611174275938-d9e19c3b2e8c?w=800&q=80"
-                    alt="Aerial view of a golf course"
+                    src="https://images.unsplash.com/photo-1559599101-f09722fb4948?w=800&q=80"
+                    alt="Golf course fairway and greens"
                     loading="lazy"
                   />
                 </div>
@@ -769,10 +769,10 @@ export default function StarterLanding() {
 
               <div className="sl-step sl-reveal sl-reveal-d2">
                 <div className="sl-step-img">
-                  {/* Group of golfers together — friends, social golf vibe */}
+                  {/* Scenic golf destination — course landscape */}
                   <img
-                    src="https://images.unsplash.com/photo-1571689936114-b16f24c9e7e9?w=800&q=80"
-                    alt="Group of friends on the golf course"
+                    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"
+                    alt="Beautiful golf course destination landscape"
                     loading="lazy"
                   />
                 </div>
@@ -825,9 +825,9 @@ export default function StarterLanding() {
 
               <div className="sl-trip-card sl-reveal sl-reveal-d1">
                 <div className="sl-trip-img">
-                  {/* Pebble Beach — 18th hole along the Pacific coast */}
+                  {/* Pebble Beach — coastal golf course */}
                   <img
-                    src="https://images.unsplash.com/photo-1472745433479-4556f770b9b1?w=1200&q=80"
+                    src="https://images.unsplash.com/photo-1464699908537-0954e50791ee?w=1200&q=80"
                     alt="Pebble Beach golf course along the California coast"
                     loading="lazy"
                   />
@@ -861,9 +861,9 @@ export default function StarterLanding() {
 
               <div className="sl-trip-card sl-reveal sl-reveal-d2">
                 <div className="sl-trip-img">
-                  {/* Scottish links — dramatic sky, coastal links course */}
+                  {/* Scottish links — golf course with flag */}
                   <img
-                    src="https://images.unsplash.com/photo-1574271143515-5cddf8da19be?w=900&q=80"
+                    src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=900&q=80"
                     alt="Scottish links golf course under dramatic skies"
                     loading="lazy"
                   />

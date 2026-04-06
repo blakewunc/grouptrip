@@ -59,8 +59,9 @@ export function Navbar() {
 
   const isActive = (path: string) => pathname === path
 
-  // Full-page landing uses its own nav
-  if (pathname === '/starter') return null
+  // Full-page landing uses its own nav.
+  // pathname is '/' (browser URL) when middleware rewrites / → /starter
+  if (isBackNine && (pathname === '/' || pathname === '/starter')) return null
 
   return (
     <nav className={`sticky top-0 z-50 border-b shadow-sm ${

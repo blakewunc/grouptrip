@@ -12,8 +12,9 @@ export function Footer() {
   const brand = useBrand()
   const isBackNine = brand.id === 'backNine'
 
-  // Full-page landing uses its own footer
-  if (pathname === '/starter') return null
+  // Full-page landing uses its own footer.
+  // pathname is '/' (browser URL) when middleware rewrites / → /starter
+  if (isBackNine && (pathname === '/' || pathname === '/starter')) return null
 
   return (
     <footer className={`border-t ${
