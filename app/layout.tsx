@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
@@ -18,6 +18,19 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -80,7 +93,7 @@ export default async function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-1500136289047835" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${dmSans.variable} antialiased`}
       >
         <BrandProvider brand={brand}>
           <Navbar />

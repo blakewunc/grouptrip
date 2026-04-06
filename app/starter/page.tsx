@@ -750,10 +750,10 @@ export default function StarterLanding() {
 
               <div className="sl-step sl-reveal sl-reveal-d1">
                 <div className="sl-step-img">
-                  {/* Aerial view of a golf club — fairway layout from above */}
+                  {/* Aerial island green surrounded by bunkers and water hazard */}
                   <img
-                    src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80"
-                    alt="Aerial view of a golf course fairway layout"
+                    src="https://images.unsplash.com/photo-1605144884374-ecbb643615f6?w=800&q=80"
+                    alt="Aerial view of an island golf green surrounded by bunkers"
                     loading="lazy"
                   />
                 </div>
@@ -769,10 +769,10 @@ export default function StarterLanding() {
 
               <div className="sl-step sl-reveal sl-reveal-d2">
                 <div className="sl-step-img">
-                  {/* Golfers playing together on a course */}
+                  {/* Golf green with white flag, pond and trees in background */}
                   <img
-                    src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&q=80"
-                    alt="Group of golfers playing on a course"
+                    src="https://images.unsplash.com/photo-1606443192517-919653213206?w=800&q=80"
+                    alt="Golf green with flag and pond, blue sky"
                     loading="lazy"
                   />
                 </div>
@@ -825,10 +825,10 @@ export default function StarterLanding() {
 
               <div className="sl-trip-card sl-reveal sl-reveal-d1">
                 <div className="sl-trip-img">
-                  {/* Pebble Beach — Hole 7, cliff over the Pacific Ocean */}
+                  {/* Coastal parkland course with ocean panorama */}
                   <img
-                    src="https://images.unsplash.com/photo-1500932334442-8761ee4810a7?w=1200&q=80"
-                    alt="Pebble Beach Golf Links, Hole 7 overlooking the Pacific Ocean"
+                    src="https://images.unsplash.com/photo-1635328800844-0e68e80ab258?w=1200&q=80"
+                    alt="Pebble Beach Golf Links overlooking the Pacific Ocean"
                     loading="lazy"
                   />
                   <div className="sl-trip-overlay" />
@@ -843,10 +843,10 @@ export default function StarterLanding() {
 
               <div className="sl-trip-card sl-reveal sl-reveal-d2">
                 <div className="sl-trip-img">
-                  {/* Pinehurst No. 2 — actual course, NC Sandhills */}
+                  {/* Classic parkland course: bunker, fairway, blue sky */}
                   <img
-                    src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80"
-                    alt="Pinehurst No. 2 golf course, North Carolina"
+                    src="https://images.unsplash.com/photo-1443706340763-4b60757a36ce?w=800&q=80"
+                    alt="Pinehurst No. 2 golf course, North Carolina Sandhills"
                     loading="lazy"
                   />
                   <div className="sl-trip-overlay" />
@@ -861,10 +861,10 @@ export default function StarterLanding() {
 
               <div className="sl-trip-card sl-reveal sl-reveal-d2">
                 <div className="sl-trip-img">
-                  {/* Old Course at St Andrews — Swilcan Bridge, R&A Clubhouse */}
+                  {/* Links course at purple sunset, coastal cliffs in distance */}
                   <img
-                    src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80"
-                    alt="The Old Course at St Andrews — Swilcan Bridge and R&A Clubhouse"
+                    src="https://images.unsplash.com/photo-1672871583040-42826d4e9ca4?w=800&q=80"
+                    alt="Scottish links golf course at sunset with coastal cliffs"
                     loading="lazy"
                   />
                   <div className="sl-trip-overlay" />
