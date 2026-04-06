@@ -359,10 +359,10 @@ export default function ScottishPilgrimagePage() {
               <div>
                 <p style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A09890', marginBottom: 4 }}>The Old Course Reality Check</p>
                 <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 24, fontWeight: 300, color: '#1C1A17', margin: 0 }}>
-                  You should never sell "play the Old Course"
+                  The Old Course is a ballot, not a booking
                 </h2>
                 <p style={{ fontSize: 13, color: '#6B6460', marginTop: 6 }}>
-                  Sell the <em>St Andrews experience with an Old Course attempt</em>. The distinction matters.
+                  This itinerary gives you the best possible odds — with a world-class backup so no day is wasted regardless.
                 </p>
               </div>
               <button onClick={() => setBallotOpen(false)} style={{ fontSize: 12, color: '#A09890', background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, flexShrink: 0 }}>Hide ↑</button>
