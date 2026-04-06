@@ -197,7 +197,7 @@ export default function StarterLanding() {
           letter-spacing: 0.12em;
           text-transform: uppercase;
           border: 1px solid rgba(245,241,237,0.45);
-          color: var(--cream);
+          color: var(--cream) !important;
           padding: 15px 36px;
           border-radius: 2px;
           transition: border-color 0.25s, background 0.25s;
@@ -752,7 +752,7 @@ export default function StarterLanding() {
                 <div className="sl-step-img">
                   {/* Aerial view of a golf club — fairway layout from above */}
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/GreatSouthernGolfClubAerialView_Fairway_layout.jpg/800px-GreatSouthernGolfClubAerialView_Fairway_layout.jpg"
+                    src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80"
                     alt="Aerial view of a golf course fairway layout"
                     loading="lazy"
                   />
@@ -771,7 +771,7 @@ export default function StarterLanding() {
                 <div className="sl-step-img">
                   {/* Golfers playing together on a course */}
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Golfers_playing_at_the_Holyhead_Golf_Course_-_geograph.org.uk_-_895350.jpg/800px-Golfers_playing_at_the_Holyhead_Golf_Course_-_geograph.org.uk_-_895350.jpg"
+                    src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&q=80"
                     alt="Group of golfers playing on a course"
                     loading="lazy"
                   />
@@ -827,7 +827,7 @@ export default function StarterLanding() {
                 <div className="sl-trip-img">
                   {/* Pebble Beach — Hole 7, cliff over the Pacific Ocean */}
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Pebble_Beach_Golf_Links%2C_hole_7.jpg/1200px-Pebble_Beach_Golf_Links%2C_hole_7.jpg"
+                    src="https://images.unsplash.com/photo-1500932334442-8761ee4810a7?w=1200&q=80"
                     alt="Pebble Beach Golf Links, Hole 7 overlooking the Pacific Ocean"
                     loading="lazy"
                   />
@@ -845,7 +845,7 @@ export default function StarterLanding() {
                 <div className="sl-trip-img">
                   {/* Pinehurst No. 2 — actual course, NC Sandhills */}
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Pinehurst_No._2.JPG/1200px-Pinehurst_No._2.JPG"
+                    src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80"
                     alt="Pinehurst No. 2 golf course, North Carolina"
                     loading="lazy"
                   />
@@ -863,7 +863,7 @@ export default function StarterLanding() {
                 <div className="sl-trip-img">
                   {/* Old Course at St Andrews — Swilcan Bridge, R&A Clubhouse */}
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/R%26A_Clubhouse%2C_Old_Course%2C_Swilcan_Burn_bridge.jpg/1200px-R%26A_Clubhouse%2C_Old_Course%2C_Swilcan_Burn_bridge.jpg"
+                    src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80"
                     alt="The Old Course at St Andrews — Swilcan Bridge and R&A Clubhouse"
                     loading="lazy"
                   />
