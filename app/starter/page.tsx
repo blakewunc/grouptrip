@@ -837,7 +837,7 @@ export default function StarterLanding() {
                   <span className="sl-trip-tag">Featured · Spots Available</span>
                   <h3 className="sl-trip-name">Pebble Beach &amp;<br />Monterey Peninsula</h3>
                   <p className="sl-trip-meta">4 nights · 3 rounds · Pebble, Spyglass, Poppy Hills</p>
-                  <Link href="/trips/new" className="sl-trip-cta">Plan this trip</Link>
+                  <Link href="/trips/curated/pebble-beach" className="sl-trip-cta">Plan this trip</Link>
                 </div>
               </div>
 

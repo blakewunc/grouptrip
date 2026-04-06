@@ -37,6 +37,45 @@ const TEMPLATES = {
       { name: 'Miscellaneous', split_type: 'equal', description: 'Tips, extras, Cradle drinks, souvenirs', base_per_person: 100 },
     ],
   },
+  'pebble-beach': {
+    title: 'Pebble Beach & Monterey Peninsula',
+    destination: 'Pebble Beach, CA',
+    trip_type: 'golf',
+    description: '4-night bucket list trip: Pebble Beach Golf Links, Spyglass Hill, and the full Monterey Peninsula experience.',
+    nights: 4,
+    itinerary: [
+      // Day 1 — Arrival
+      { offset: 0, time: '15:00', title: 'Arrive & Check In', location: 'The Lodge at Pebble Beach', description: 'Fly into Monterey (MRY) or San Jose (SJC, ~1.5 hr drive). Check into The Lodge or The Inn at Spanish Bay.', sort_order: 0 },
+      { offset: 0, time: '17:00', title: 'Walk the Property', location: 'Pebble Beach Resort', description: 'Walk 18th hole bluff, get your bearings, and let it sink in that you\'re actually here.', sort_order: 1 },
+      { offset: 0, time: '18:30', title: 'Drinks — The Bench', location: 'The Bench, Pebble Beach', description: 'Casual opening drinks with views. Set the tone for the trip.', sort_order: 2 },
+      { offset: 0, time: '19:30', title: 'Dinner — Stillwater Bar & Grill', location: 'Stillwater Bar & Grill, Pebble Beach', description: 'Overlooks the 18th hole of Pebble. Iconic first night — book well in advance.', sort_order: 3 },
+      // Day 2 — Main Event
+      { offset: 1, time: '08:00', title: 'Pebble Beach Golf Links — The Bucket List Round', location: 'Pebble Beach Golf Links', description: 'One of the most famous courses in the world. Holes 4–10 along the ocean are unreal. Take a caddie — non-negotiable.', sort_order: 4 },
+      { offset: 1, time: '13:30', title: 'Lunch + Soak It In', location: 'Pebble Beach Clubhouse', description: 'Don\'t rush. This is the round you\'ll talk about for 10 years. Relive every hole.', sort_order: 5 },
+      { offset: 1, time: '15:30', title: 'Relax — Spa / Nap / Putting Green', location: 'Pebble Beach Resort', description: 'Recovery mode. Spa, pool, or just sit on the porch and stare at the ocean.', sort_order: 6 },
+      { offset: 1, time: '19:00', title: 'Dinner — Roy\'s at Pebble Beach', location: 'Roy\'s, Pebble Beach', description: 'Hawaiian fusion. Great post-round dinner with elevated flavors and good cocktails.', sort_order: 7 },
+      // Day 3 — Spyglass + Spanish Bay
+      { offset: 2, time: '08:00', title: 'Spyglass Hill Golf Course', location: 'Spyglass Hill, Pebble Beach', description: 'Harder than Pebble. Stunning mix of coastal and forest holes. Caddies optional but helpful here too.', sort_order: 8 },
+      { offset: 2, time: '14:00', title: '17-Mile Drive', location: 'Pebble Beach', description: 'Drive the iconic route: Lone Cypress, Ghost Tree, Fanshell Beach. Stop, get out, take it in.', sort_order: 9 },
+      { offset: 2, time: '17:30', title: 'Bagpiper Sunset Ceremony at Spanish Bay', location: 'The Inn at Spanish Bay', description: 'A bagpiper plays at sunset every evening on the 18th at Spanish Bay. Fire pits, drinks, incredible vibe. Do not skip this.', sort_order: 10 },
+      { offset: 2, time: '19:30', title: 'Dinner — The Tap Room', location: 'The Tap Room, Pebble Beach', description: 'Classic steakhouse feel. Great for the group after a competitive day.', sort_order: 11 },
+      // Day 4 — Flexible Golf + Carmel
+      { offset: 3, time: '08:00', title: 'Morning Round — Spanish Bay, Pacific Grove, or Pasatiempo', location: 'Monterey Peninsula', description: 'The Links at Spanish Bay (true links, windy), Pacific Grove Golf Links (back 9 = poor man\'s Pebble), or Pasatiempo (MacKenzie design, Augusta ties). Crew\'s call.', sort_order: 12 },
+      { offset: 3, time: '14:00', title: 'Carmel-by-the-Sea', location: 'Carmel, CA', description: 'Walk the village, drinks, beach. The perfect decompression afternoon after 3 rounds.', sort_order: 13 },
+      { offset: 3, time: '19:00', title: 'Final Dinner — La Bicyclette', location: 'La Bicyclette, Carmel', description: 'Best group dinner in the area. More local, less resort vibe. Great way to close out the trip.', sort_order: 14 },
+      // Day 5 — Departure
+      { offset: 4, time: '09:00', title: 'Breakfast Overlooking the Ocean', location: 'Pebble Beach Resort', description: 'Take your time. Optional short practice session on the putting green.', sort_order: 15 },
+      { offset: 4, time: '11:00', title: 'Head Out', location: 'Monterey, CA', description: 'Back to MRY or SJC. Already planning the return trip.', sort_order: 16 },
+    ],
+    budget_categories: [
+      { name: 'Lodging (4 nights)', split_type: 'equal', description: 'The Lodge or Inn at Spanish Bay — required for guaranteed Pebble tee time', base_per_person: 2500 },
+      { name: 'Golf — Pebble Beach', split_type: 'equal', description: 'Green fee + caddie (non-negotiable)', base_per_person: 625 },
+      { name: 'Golf — Spyglass Hill', split_type: 'equal', description: 'Green fee + optional caddie', base_per_person: 450 },
+      { name: 'Golf — Day 4 Round', split_type: 'equal', description: 'Spanish Bay, Pacific Grove, or Pasatiempo', base_per_person: 350 },
+      { name: 'Food & Drinks', split_type: 'equal', description: 'Stillwater, Roy\'s, Tap Room, Carmel dinner — 4 days', base_per_person: 800 },
+      { name: 'Miscellaneous', split_type: 'equal', description: 'Tips, 17-Mile Drive toll, extras, Carmel shopping', base_per_person: 300 },
+    ],
+  },
 } as const
 
 export async function POST(request: Request) {
