@@ -268,7 +268,7 @@ export default function PebbleBeachCuratedPage() {
         </div>
         <button
           onClick={() => setTimelineOpen(true)}
-          style={{ fontSize: 11, color: '#F5F1ED', background: 'transparent', border: '0.5px solid rgba(245,241,237,0.3)', borderRadius: 4, padding: '6px 14px', cursor: 'pointer', letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'inherit' }}
+          style={{ fontSize: 11, color: '#F5F1ED', background: 'transparent', border: '0.5px solid rgba(245,241,237,0.3)', borderRadius: 5, padding: '6px 14px', cursor: 'pointer', letterSpacing: '0.06em', whiteSpace: 'nowrap', fontFamily: 'inherit' }}
         >
           See booking timeline →
         </button>
@@ -433,7 +433,7 @@ export default function PebbleBeachCuratedPage() {
 
               {/* Booking status */}
               {startDate && (
-                <div style={{ background: bookingStatus.bg, borderRadius: 4, padding: '8px 12px', marginBottom: 16, fontSize: 12, color: bookingStatus.color, fontWeight: 500 }}>
+                <div style={{ background: bookingStatus.bg, borderRadius: 5, padding: '8px 12px', marginBottom: 16, fontSize: 12, color: bookingStatus.color, fontWeight: 500 }}>
                   {bookingStatus.label}
                   {monthsOut > 0 && <span style={{ fontWeight: 400, color: bookingStatus.color, opacity: 0.8 }}> ({monthsOut} months out)</span>}
                 </div>
@@ -446,7 +446,7 @@ export default function PebbleBeachCuratedPage() {
                   value={startDate}
                   min={new Date().toISOString().split('T')[0]}
                   onChange={(e) => handleStartDateChange(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 4, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 5, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
                 />
               </div>
 
@@ -457,7 +457,7 @@ export default function PebbleBeachCuratedPage() {
                   value={endDate}
                   min={startDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 4, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 5, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
                 />
               </div>
 
@@ -466,7 +466,7 @@ export default function PebbleBeachCuratedPage() {
                 <select
                   value={guests}
                   onChange={(e) => setGuests(parseInt(e.target.value))}
-                  style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 4, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 5, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
                 >
                   {[2, 3, 4, 5, 6, 7, 8].map((n) => (
                     <option key={n} value={n}>{n} players</option>
@@ -500,13 +500,13 @@ export default function PebbleBeachCuratedPage() {
               </div>
 
               {error && (
-                <p style={{ fontSize: 12, color: '#8B4444', background: '#FEF2F2', padding: '8px 12px', borderRadius: 4, marginBottom: 12 }}>{error}</p>
+                <p style={{ fontSize: 12, color: '#8B4444', background: '#FEF2F2', padding: '8px 12px', borderRadius: 5, marginBottom: 12 }}>{error}</p>
               )}
 
               <button
                 onClick={handleBuildTrip}
                 disabled={loading}
-                style={{ width: '100%', background: loading ? '#8C8680' : '#1C1A17', color: '#F5F1ED', border: 'none', borderRadius: 4, padding: '13px', fontSize: 12, fontWeight: 500, letterSpacing: '0.07em', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s' }}
+                style={{ width: '100%', background: loading ? '#8C8680' : '#1C1A17', color: '#F5F1ED', border: 'none', borderRadius: 5, padding: '13px', fontSize: 12, fontWeight: 500, letterSpacing: '0.07em', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s' }}
               >
                 {loading ? 'Building your trip...' : 'Build This Trip →'}
               </button>

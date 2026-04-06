@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { formatDateRange } from '@/lib/utils/date'
 import { DEMO_TRIP } from '@/lib/demo-trip'
 
-const AVATAR_COLORS = ['#0d1f2d', '#2a5c3f', '#4a3728', '#3d4a6b', '#5a3d3d']
+const AVATAR_COLORS = ['#70798C', '#B5A98A', '#C4B9A8', '#8C7B6B', '#9A8F82']
 
 function getInitials(name: string | null | undefined, email: string | null | undefined): string {
   const src = name || email || '?'
@@ -31,7 +31,7 @@ function AvatarStack({ members }: { members: { display_name?: string | null; ema
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '9px',
-              fontWeight: 600,
+              fontWeight: 500,
               color: '#F5F1ED',
               zIndex: shown.length - i,
               position: 'relative',
@@ -42,9 +42,9 @@ function AvatarStack({ members }: { members: { display_name?: string | null; ema
         ))}
       </div>
       {overflow > 0 && (
-        <span style={{ fontSize: '12px', color: '#70798C', marginLeft: '6px' }}>+{overflow}</span>
+        <span style={{ fontSize: '12px', color: '#A09890', marginLeft: '6px' }}>+{overflow}</span>
       )}
-      <span style={{ fontSize: '12px', color: '#70798C', marginLeft: overflow > 0 ? '4px' : '8px' }}>
+      <span style={{ fontSize: '12px', color: '#A09890', marginLeft: overflow > 0 ? '4px' : '8px' }}>
         {members.length} {members.length === 1 ? 'player' : 'players'}
       </span>
     </div>
@@ -74,30 +74,30 @@ function TripCard({ trip }: { trip: TripCardData }) {
   return (
     <Link href={`/trips/${trip.id}`} className="block">
       <div
-        style={{ background: '#ffffff', border: '1px solid #e8e3dd', borderRadius: '12px', overflow: 'hidden', cursor: 'pointer' }}
-        className="transition-shadow hover:shadow-md"
+        style={{ background: '#ffffff', border: '0.5px solid rgba(28,26,23,0.10)', borderRadius: '8px', overflow: 'hidden', cursor: 'pointer' }}
+        className="transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
       >
         {/* Dark header */}
-        <div style={{ background: '#0d1f2d', padding: '20px', position: 'relative' }}>
+        <div style={{ background: '#1C1A17', padding: '20px', position: 'relative' }}>
           {trip.status && (
             <span
-              style={{ position: 'absolute', top: '14px', right: '14px', background: '#1a3347', color: '#8fa3b1', fontSize: '10px', letterSpacing: '0.08em', padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}
+              style={{ position: 'absolute', top: '14px', right: '14px', background: 'rgba(245,241,237,0.10)', color: 'rgba(245,241,237,0.45)', fontSize: '10px', letterSpacing: '0.08em', padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}
             >
               {trip.status}
             </span>
           )}
           {trip.destination && (
-            <p style={{ fontSize: '10px', letterSpacing: '0.12em', color: '#4a6070', textTransform: 'uppercase', marginBottom: '4px' }}>
+            <p style={{ fontSize: '10px', letterSpacing: '0.14em', color: 'rgba(245,241,237,0.40)', textTransform: 'uppercase', marginBottom: '4px' }}>
               {trip.destination}
             </p>
           )}
           <h2
-            style={{ fontSize: '20px', color: '#F5F1ED', fontWeight: 400, lineHeight: 1.2, fontFamily: 'Georgia, "Times New Roman", serif', marginBottom: '6px', paddingRight: '70px' }}
+            style={{ fontSize: '20px', color: '#F5F1ED', fontWeight: 300, lineHeight: 1.2, fontFamily: "'Cormorant Garamond', Georgia, serif", marginBottom: '6px', paddingRight: '70px' }}
           >
             {trip.title}
           </h2>
           {(trip.start_date || trip.end_date) && (
-            <p style={{ fontSize: '12px', color: '#8fa3b1' }}>
+            <p style={{ fontSize: '12px', color: 'rgba(245,241,237,0.50)' }}>
               {formatDateRange(trip.start_date ?? '', trip.end_date ?? '')}
             </p>
           )}
@@ -110,18 +110,18 @@ function TripCard({ trip }: { trip: TripCardData }) {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div style={{ background: '#F5F1ED', borderRadius: '6px', padding: '10px 12px' }}>
-              <p style={{ fontSize: '10px', color: '#9a9590', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
+              <p style={{ fontSize: '10px', color: '#A09890', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '4px' }}>
                 Per person
               </p>
-              <p style={{ fontSize: '15px', fontWeight: 500, color: '#0d1f2d' }}>
+              <p style={{ fontSize: '15px', fontWeight: 500, color: '#1C1A17' }}>
                 {perPerson ? `$${perPerson.toLocaleString()}` : 'Not set'}
               </p>
             </div>
             <div style={{ background: '#F5F1ED', borderRadius: '6px', padding: '10px 12px' }}>
-              <p style={{ fontSize: '10px', color: '#9a9590', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
+              <p style={{ fontSize: '10px', color: '#A09890', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '4px' }}>
                 Rounds
               </p>
-              <p style={{ fontSize: '15px', fontWeight: 500, color: '#0d1f2d' }}>
+              <p style={{ fontSize: '15px', fontWeight: 500, color: '#1C1A17' }}>
                 {trip.roundsCount > 0 ? `${trip.roundsCount} booked` : 'None yet'}
               </p>
             </div>
@@ -129,10 +129,10 @@ function TripCard({ trip }: { trip: TripCardData }) {
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '12px 20px', borderTop: '1px solid #f0ebe5', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '12px 20px', borderTop: '0.5px solid rgba(28,26,23,0.07)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="flex items-center gap-2">
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: allResponded ? '#4a8c63' : respondedCount > 0 ? '#c4a060' : '#4a6070', flexShrink: 0 }} />
-            <span style={{ fontSize: '12px', color: '#70798C' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: allResponded ? '#3B6D11' : respondedCount > 0 ? '#B8956A' : '#A09890', flexShrink: 0 }} />
+            <span style={{ fontSize: '12px', color: '#6B6460' }}>
               {allResponded
                 ? 'All responded'
                 : memberCount > 0
@@ -140,8 +140,8 @@ function TripCard({ trip }: { trip: TripCardData }) {
                 : 'Getting started'}
             </span>
           </div>
-          <span style={{ fontSize: '12px', color: '#2a5c3f', fontWeight: 500 }}>
-            Open trip →
+          <span style={{ fontSize: '12px', color: '#70798C', fontWeight: 500 }}>
+            Open →
           </span>
         </div>
       </div>
@@ -153,20 +153,20 @@ function NewTripCard() {
   return (
     <Link href="/trips/new" className="block">
       <div
-        style={{ border: '1.5px dashed #d4cfc9', background: 'transparent', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '220px', cursor: 'pointer' }}
-        className="transition-colors hover:border-[#2a5c3f]"
+        style={{ border: '0.5px dashed rgba(28,26,23,0.25)', background: 'transparent', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '220px', cursor: 'pointer', transition: 'border-color 0.2s, background 0.2s' }}
+        className="hover:border-[rgba(28,26,23,0.45)] hover:bg-white"
       >
         <div className="text-center">
           <div
-            style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1.5px dashed #d4cfc9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}
+            style={{ width: '40px', height: '40px', borderRadius: '50%', border: '0.5px dashed rgba(28,26,23,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a9590" strokeWidth="1.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A09890" strokeWidth="1.5">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </div>
-          <p style={{ fontSize: '14px', fontWeight: 500, color: '#0d1f2d', marginBottom: '4px' }}>Plan a new trip</p>
-          <p style={{ fontSize: '12px', color: '#9a9590' }}>Invite your crew with one link</p>
+          <p style={{ fontSize: '14px', fontWeight: 500, color: '#1C1A17', marginBottom: '4px' }}>Plan a new trip</p>
+          <p style={{ fontSize: '12px', color: '#A09890' }}>Invite your crew with one link</p>
         </div>
       </div>
     </Link>
@@ -200,16 +200,16 @@ export default async function TripsPage() {
         <div className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 flex items-start justify-between">
             <div>
-              <p style={{ fontSize: '11px', letterSpacing: '0.12em', color: '#70798C', textTransform: 'uppercase', marginBottom: '8px' }}>
+              <p style={{ fontSize: '11px', letterSpacing: '0.14em', color: '#A09890', textTransform: 'uppercase', marginBottom: '8px' }}>
                 My Golf Trips
               </p>
-              <h1 style={{ fontSize: '24px', fontWeight: 400, color: '#0d1f2d', fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              <h1 style={{ fontSize: '26px', fontWeight: 300, color: '#1C1A17', fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
                 Where are you headed?
               </h1>
             </div>
             <Link
               href="/signup"
-              style={{ background: '#0d1f2d', color: '#F5F1ED', fontSize: '13px', padding: '9px 18px', borderRadius: '6px', whiteSpace: 'nowrap' }}
+              style={{ background: '#1C1A17', color: '#F5F1ED', fontSize: '12px', padding: '9px 18px', borderRadius: '4px', whiteSpace: 'nowrap', letterSpacing: '0.05em', fontWeight: 500 }}
               className="transition-opacity hover:opacity-80"
             >
               + Plan a trip
@@ -226,14 +226,14 @@ export default async function TripsPage() {
             <NewTripCard />
           </div>
 
-          <div className="mt-6 rounded-[5px] border border-[#e8e3dd] bg-white p-8 text-center">
-            <p className="mb-1 text-base font-semibold" style={{ color: '#0d1f2d' }}>This is a sample trip</p>
-            <p className="mb-4 text-sm" style={{ color: '#70798C' }}>
+          <div className="mt-6" style={{ background: '#fff', border: '0.5px solid rgba(28,26,23,0.10)', borderRadius: '8px', padding: '32px', textAlign: 'center' }}>
+            <p style={{ fontSize: '15px', fontWeight: 500, color: '#1C1A17', marginBottom: '6px' }}>This is a sample trip</p>
+            <p style={{ fontSize: '13px', color: '#6B6460', marginBottom: '20px' }}>
               Create a free account to plan your own golf trip — tee times, scores, expenses, and more.
             </p>
             <Link
               href="/signup"
-              style={{ background: '#0d1f2d', color: '#F5F1ED', fontSize: '14px', padding: '10px 24px', borderRadius: '6px', display: 'inline-block' }}
+              style={{ background: '#1C1A17', color: '#F5F1ED', fontSize: '12px', padding: '10px 24px', borderRadius: '4px', display: 'inline-block', letterSpacing: '0.05em', fontWeight: 500 }}
               className="transition-opacity hover:opacity-80"
             >
               Plan Your Own Golf Trip →
@@ -291,16 +291,16 @@ export default async function TripsPage() {
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <p style={{ fontSize: '11px', letterSpacing: '0.12em', color: '#70798C', textTransform: 'uppercase', marginBottom: '8px' }}>
+            <p style={{ fontSize: '11px', letterSpacing: '0.14em', color: '#A09890', textTransform: 'uppercase', marginBottom: '8px' }}>
               My Golf Trips
             </p>
-            <h1 style={{ fontSize: '24px', fontWeight: 400, color: '#0d1f2d', fontFamily: 'Georgia, "Times New Roman", serif' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: 300, color: '#1C1A17', fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
               Where are you headed?
             </h1>
           </div>
           <Link
             href="/trips/new"
-            style={{ background: '#0d1f2d', color: '#F5F1ED', fontSize: '13px', padding: '9px 18px', borderRadius: '6px', whiteSpace: 'nowrap' }}
+            style={{ background: '#1C1A17', color: '#F5F1ED', fontSize: '12px', padding: '9px 18px', borderRadius: '4px', whiteSpace: 'nowrap', letterSpacing: '0.05em', fontWeight: 500 }}
             className="transition-opacity hover:opacity-80"
           >
             + Plan a trip

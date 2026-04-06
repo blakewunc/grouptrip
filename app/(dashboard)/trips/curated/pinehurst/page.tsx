@@ -284,7 +284,7 @@ export default function PinehurstCuratedPage() {
                 value={startDate}
                 min={new Date().toISOString().split('T')[0]}
                 onChange={(e) => handleStartDateChange(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 4, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
+                style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 5, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
               />
             </div>
 
@@ -295,7 +295,7 @@ export default function PinehurstCuratedPage() {
                 value={endDate}
                 min={startDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 4, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
+                style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 5, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
               />
             </div>
 
@@ -304,7 +304,7 @@ export default function PinehurstCuratedPage() {
               <select
                 value={guests}
                 onChange={(e) => setGuests(parseInt(e.target.value))}
-                style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 4, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
+                style={{ width: '100%', padding: '9px 12px', border: '0.5px solid rgba(28,26,23,0.18)', borderRadius: 5, fontSize: 13, color: '#1C1A17', background: '#F5F1ED', outline: 'none', fontFamily: 'inherit' }}
               >
                 {[2, 3, 4, 5, 6, 7, 8, 10, 12].map((n) => (
                   <option key={n} value={n}>{n} players</option>
@@ -337,7 +337,7 @@ export default function PinehurstCuratedPage() {
             </div>
 
             {error && (
-              <p style={{ fontSize: 12, color: '#8B4444', background: '#FEF2F2', padding: '8px 12px', borderRadius: 4, marginBottom: 12 }}>{error}</p>
+              <p style={{ fontSize: 12, color: '#8B4444', background: '#FEF2F2', padding: '8px 12px', borderRadius: 5, marginBottom: 12 }}>{error}</p>
             )}
 
             <button
@@ -348,7 +348,7 @@ export default function PinehurstCuratedPage() {
                 background: loading ? '#8C8680' : '#1C1A17',
                 color: '#F5F1ED',
                 border: 'none',
-                borderRadius: 4,
+                borderRadius: 5,
                 padding: '13px',
                 fontSize: 12,
                 fontWeight: 500,

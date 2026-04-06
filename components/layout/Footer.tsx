@@ -34,13 +34,13 @@ export function Footer() {
                   <svg className="h-6 w-6 text-[#70798C]" viewBox="0 0 32 32" fill="currentColor">
                     <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28C9.373 28 4 22.627 4 16S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12zm-2-20v12l10 6-10-18z" />
                   </svg>
-                  <span className="text-lg font-bold text-[#252323]">
+                  <span className="text-lg font-bold text-[#1C1A17]">
                     {brand.name}
                   </span>
                 </>
               )}
             </div>
-            <p className={`mt-2 text-sm ${isBackNine ? 'text-[#B8D4C4]' : 'text-[#A99985]'}`}>
+            <p className={`mt-2 text-sm ${isBackNine ? 'text-[#B8D4C4]' : 'text-[#A09890]'}`}>
               {brand.description}
             </p>
           </div>
@@ -48,49 +48,49 @@ export function Footer() {
           {/* Links */}
           <div className="flex gap-12">
             <div>
-              <h4 className={`text-xs font-semibold uppercase tracking-wide ${isBackNine ? 'text-[#8ECC7A]' : 'text-[#252323]'}`}>
+              <h4 className={`text-xs font-semibold uppercase tracking-wide ${isBackNine ? 'text-[#8ECC7A]' : 'text-[#1C1A17]'}`}>
                 Product
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <Link href="/trips" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/trips" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     {isBackNine ? 'My Golf Trips' : 'My Trips'}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/trips/new" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/trips/new" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     {isBackNine ? 'Plan a Trip' : 'Create Trip'}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/blog" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     {isBackNine ? 'Golf Trip Guides' : 'Blog'}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/settings" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/settings" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     Settings
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className={`text-xs font-semibold uppercase tracking-wide ${isBackNine ? 'text-[#8ECC7A]' : 'text-[#252323]'}`}>
+              <h4 className={`text-xs font-semibold uppercase tracking-wide ${isBackNine ? 'text-[#8ECC7A]' : 'text-[#1C1A17]'}`}>
                 Company
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <Link href="/about" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/about" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/contact" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A99985] hover:text-[#252323]'}`}>
+                  <Link href="/privacy" className={`text-sm transition-colors ${isBackNine ? 'text-[#B8D4C4] hover:text-white' : 'text-[#A09890] hover:text-[#1C1A17]'}`}>
                     Privacy Policy
                   </Link>
                 </li>
@@ -104,7 +104,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className={`mt-8 border-t pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${isBackNine ? 'border-[#B8D4C4]/20' : 'border-[#F5F1ED]'}`}>
-          <p className={`text-xs ${isBackNine ? 'text-[#5A7A6B]' : 'text-[#A99985]'}`}>
+          <p className={`text-xs ${isBackNine ? 'text-[#5A7A6B]' : 'text-[#A09890]'}`}>
             &copy; {new Date().getFullYear()} {brand.name}. All rights reserved.
           </p>
           {/* Brand switcher */}
@@ -113,7 +113,7 @@ export function Footer() {
             className={`inline-flex items-center gap-1.5 text-xs transition-colors ${
               isBackNine
                 ? 'text-[#5A7A6B] hover:text-[#B8D4C4]'
-                : 'text-[#A99985] hover:text-[#252323]'
+                : 'text-[#A09890] hover:text-[#1C1A17]'
             }`}
           >
             <svg className="h-3 w-3" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
