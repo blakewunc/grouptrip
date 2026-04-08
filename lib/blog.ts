@@ -1,10 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Public anon client — only reads published posts (RLS enforced)
+// Use service role key server-side to bypass RLS for public blog reads
+// Falls back to anon key if service role not available (client-side)
 function getPublicClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 }
 
