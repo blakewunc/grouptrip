@@ -24,6 +24,15 @@ export async function GET(
     const { data: membership } = await isMember(supabase, groupId, user.id)
     if (!membership) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
+    // Fetch competition IDs for this group first (subqueries not supported in Supabase JS)
+    const { data: comps } = await supabase
+      .from('competitions')
+      .select('id')
+      .eq('group_id', groupId)
+
+    const compIds = (comps || []).map((c: any) => c.id)
+    if (compIds.length === 0) return NextResponse.json({ matches: [] })
+
     const { data: matches, error } = await supabase
       .from('matches')
       .select(`
@@ -31,7 +40,7 @@ export async function GET(
         match_sides(id, side, team_id, user_id, profiles(display_name, email), competition_teams(id, name, color)),
         match_results(id, winner, points_a, points_b, notes)
       `)
-      .eq('competition_id', supabase.from('competitions').select('id').eq('group_id', groupId))
+      .in('competition_id', compIds)
       .order('played_on', { ascending: false })
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })

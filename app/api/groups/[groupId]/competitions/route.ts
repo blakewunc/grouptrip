@@ -30,7 +30,8 @@ export async function GET(
         ),
         matches(
           id, played_on, course, format, status,
-          match_results(winner, points_a, points_b)
+          match_results(winner, points_a, points_b),
+          match_sides(side, user_id, team_id)
         )
       `)
       .eq('group_id', groupId)

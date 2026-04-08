@@ -1,10 +1,57 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+
+interface BlogPost {
+  slug: string
+  title: string
+  excerpt: string | null
+  category: string | null
+  content: string
+}
+
+const FALLBACK_POSTS: BlogPost[] = [
+  {
+    slug: 'golf-trip-planning-checklist',
+    title: 'The Complete Golf Trip Planning Checklist',
+    excerpt: 'Month-by-month from idea to first tee without missing anything.',
+    category: 'Planning Tips',
+    content: '',
+  },
+  {
+    slug: 'nassau-betting-format-explained',
+    title: 'Nassau Betting: The Format Your Group Needs',
+    excerpt: 'Front 9, back 9, total — why every golf trip runs a nassau.',
+    category: 'Betting Formats',
+    content: '',
+  },
+  {
+    slug: 'pinehurst-golf-trip-guide',
+    title: 'Pinehurst Golf Trip Guide',
+    excerpt: 'Everything your group needs to know before heading to the Sandhills.',
+    category: 'Destinations',
+    content: '',
+  },
+]
+
+function calcReadTime(content: string) {
+  const words = content.split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.ceil(words / 200)) + ' min read'
+}
 
 export default function StarterLanding() {
   const navRef = useRef<HTMLElement>(null)
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(FALLBACK_POSTS)
+
+  useEffect(() => {
+    fetch('/api/blog/recent')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.posts?.length) setBlogPosts(data.posts)
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const nav = navRef.current
@@ -1004,29 +1051,7 @@ export default function StarterLanding() {
             </div>
 
             <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
-              {[
-                {
-                  slug: 'golf-trip-planning-checklist',
-                  title: 'The Complete Golf Trip Planning Checklist',
-                  description: 'Month-by-month from idea to first tee without missing anything.',
-                  category: 'Planning Tips',
-                  readTime: '7 min read',
-                },
-                {
-                  slug: 'nassau-betting-format-explained',
-                  title: 'Nassau Betting: The Format Your Group Needs',
-                  description: 'Front 9, back 9, total — why every golf trip runs a nassau.',
-                  category: 'Betting Formats',
-                  readTime: '5 min read',
-                },
-                {
-                  slug: 'pinehurst-golf-trip-guide',
-                  title: 'Pinehurst Golf Trip Guide',
-                  description: 'Everything your group needs to know before heading to the Sandhills.',
-                  category: 'Destinations',
-                  readTime: '8 min read',
-                },
-              ].map((post) => (
+              {blogPosts.slice(0, 3).map((post) => (
                 <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
                   <article
                     style={{
@@ -1042,16 +1067,16 @@ export default function StarterLanding() {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
                       <span style={{ fontSize: '10px', letterSpacing: '0.10em', textTransform: 'uppercase', color: '#70798C', fontWeight: 600 }}>
-                        {post.category}
+                        {post.category || 'Golf'}
                       </span>
                       <span style={{ fontSize: '10px', color: '#DAD2BC' }}>·</span>
-                      <span style={{ fontSize: '10px', color: '#A09890' }}>{post.readTime}</span>
+                      <span style={{ fontSize: '10px', color: '#A09890' }}>{calcReadTime(post.content)}</span>
                     </div>
                     <h3 style={{ fontSize: '15px', fontWeight: 500, color: '#1C1A17', lineHeight: 1.35, marginBottom: '8px' }}>
                       {post.title}
                     </h3>
                     <p style={{ fontSize: '12px', color: '#6B6460', lineHeight: 1.6 }}>
-                      {post.description}
+                      {post.excerpt || ''}
                     </p>
                   </article>
                 </Link>

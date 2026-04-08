@@ -12,6 +12,7 @@ interface TeeTimeListProps {
   tripId: string
   /** Show only Enter Scores buttons — no schedule management */
   scoreOnly?: boolean
+  onScoresSaved?: (courseName: string) => void
 }
 
 interface Member {
@@ -19,7 +20,7 @@ interface Member {
   display_name: string
 }
 
-export function TeeTimeList({ tripId, scoreOnly = false }: TeeTimeListProps) {
+export function TeeTimeList({ tripId, scoreOnly = false, onScoresSaved }: TeeTimeListProps) {
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [scoreTeeTime, setScoreTeeTime] = useState<{ id: string; course_name: string; par: number } | null>(null)
   const [members, setMembers] = useState<Member[]>([])
@@ -171,6 +172,7 @@ export function TeeTimeList({ tripId, scoreOnly = false }: TeeTimeListProps) {
         members={members}
         open={!!scoreTeeTime}
         onOpenChange={(open) => { if (!open) setScoreTeeTime(null) }}
+        onScoresSaved={onScoresSaved}
       />
     </div>
   )

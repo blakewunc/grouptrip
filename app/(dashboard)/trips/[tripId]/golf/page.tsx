@@ -2,6 +2,7 @@
 
 import { use, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { TeeTimeList } from '@/components/golf/TeeTimeList'
 import { EquipmentCoordination } from '@/components/golf/EquipmentCoordination'
@@ -34,6 +35,7 @@ export default function GolfPage({ params }: { params: Promise<{ tripId: string 
   const { tripId } = use(params)
   const router = useRouter()
   const [profileOpen, setProfileOpen] = useState(false)
+  const [roundBanner, setRoundBanner] = useState<string | null>(null) // course name after scores saved
 
   return (
     <div className="min-h-screen" style={{ background: '#F5F1ED' }}>
@@ -159,6 +161,34 @@ export default function GolfPage({ params }: { params: Promise<{ tripId: string 
         <div className="space-y-6 mb-10">
           <SectionHeader label="During the Round" sublabel="Play" />
 
+          {/* Trip linking banner — appears after scores are saved */}
+          {roundBanner && (
+            <div style={{ background: '#fff', border: '0.5px solid rgba(28,26,23,0.12)', borderRadius: '8px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+              <div>
+                <p style={{ fontSize: '13px', fontWeight: 500, color: '#1C1A17', marginBottom: '2px' }}>
+                  Scores saved for {roundBanner}
+                </p>
+                <p style={{ fontSize: '12px', color: '#6B6460' }}>
+                  Want to log this round in your season competition?
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                <Link
+                  href="/my-group"
+                  style={{ background: '#1C1A17', color: '#F5F1ED', borderRadius: '5px', padding: '8px 16px', fontSize: '12px', fontWeight: 500, textDecoration: 'none', whiteSpace: 'nowrap' }}
+                >
+                  Log Match →
+                </Link>
+                <button
+                  onClick={() => setRoundBanner(null)}
+                  style={{ background: 'none', border: 'none', color: '#A09890', fontSize: '18px', cursor: 'pointer', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="grid gap-6 md:grid-cols-2">
             {/* Enter Scores — prominent, lives in TeeTimeList */}
             <div
@@ -178,7 +208,7 @@ export default function GolfPage({ params }: { params: Promise<{ tripId: string 
               <p style={{ fontSize: '12px', color: 'rgba(245,241,237,0.50)', marginBottom: '20px' }}>
                 Select a round below to enter scores
               </p>
-              <TeeTimeList tripId={tripId} scoreOnly />
+              <TeeTimeList tripId={tripId} scoreOnly onScoresSaved={(course) => setRoundBanner(course)} />
             </div>
 
             {/* Leaderboard */}

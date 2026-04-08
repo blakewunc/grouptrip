@@ -1,11 +1,14 @@
 import { getAllPosts, getPostBySlug } from '@/lib/blog'
 import { notFound } from 'next/navigation'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
+export const revalidate = 60
 
 export async function generateStaticParams() {
-  const posts = getAllPosts()
+  const posts = await getAllPosts()
   return posts.map((post) => ({ slug: post.slug }))
 }
 
@@ -13,21 +16,21 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params
-  const post = getPostBySlug(slug)
+  const post = await getPostBySlug(slug)
   if (!post) return { title: 'Post Not Found' }
   return {
-    title: `${post.title} | The Starter`,
-    description: post.description,
+    title: post.meta_title || `${post.title} | The Starter`,
+    description: post.meta_description || post.excerpt || '',
     openGraph: {
-      title: post.title,
-      description: post.description,
+      title: post.meta_title || post.title,
+      description: post.meta_description || post.excerpt || '',
       type: 'article',
       siteName: 'The Starter',
     },
     twitter: {
       card: 'summary',
-      title: post.title,
-      description: post.description,
+      title: post.meta_title || post.title,
+      description: post.meta_description || post.excerpt || '',
     },
   }
 }
@@ -36,10 +39,10 @@ export default async function BlogPostPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params
-  const post = getPostBySlug(slug)
+  const post = await getPostBySlug(slug)
   if (!post) notFound()
 
-  const allPosts = getAllPosts()
+  const allPosts = await getAllPosts()
   const related = allPosts
     .filter((p) => p.slug !== post.slug && p.category === post.category)
     .slice(0, 3)
@@ -62,16 +65,20 @@ export default async function BlogPostPage(
             </span>
             <span style={{ fontSize: '10px', color: 'rgba(245,241,237,0.25)' }}>·</span>
             <span style={{ fontSize: '10px', color: 'rgba(245,241,237,0.35)' }}>{post.readTime}</span>
+            <span style={{ fontSize: '10px', color: 'rgba(245,241,237,0.25)' }}>·</span>
+            <span style={{ fontSize: '10px', color: 'rgba(245,241,237,0.35)' }}>{post.author}</span>
           </div>
 
           <h1 style={{ fontSize: '30px', fontWeight: 300, color: '#F5F1ED', fontFamily: "'Cormorant Garamond', Georgia, serif", lineHeight: 1.2, marginBottom: '14px' }}>
             {post.title}
           </h1>
-          <p style={{ fontSize: '14px', color: 'rgba(245,241,237,0.50)', lineHeight: 1.6, marginBottom: '16px' }}>
-            {post.description}
-          </p>
+          {post.excerpt && (
+            <p style={{ fontSize: '14px', color: 'rgba(245,241,237,0.50)', lineHeight: 1.6, marginBottom: '16px' }}>
+              {post.excerpt}
+            </p>
+          )}
           <p style={{ fontSize: '11px', color: 'rgba(245,241,237,0.30)' }}>
-            {new Date(post.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            {new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
         </div>
       </div>
@@ -90,11 +97,11 @@ export default async function BlogPostPage(
             prose-a:text-[#70798C] prose-a:no-underline hover:prose-a:underline
             prose-hr:border-[rgba(28,26,23,0.10)] prose-hr:my-10
             prose-blockquote:border-l-[#70798C] prose-blockquote:text-[#6B6460] prose-blockquote:not-italic
-            prose-table:text-sm prose-th:text-[#1C1A17] prose-td:text-[#3C3835]
-            prose-code:text-[#1C1A17] prose-code:bg-[rgba(28,26,23,0.06)] prose-code:px-1 prose-code:rounded
           "
         >
-          <MDXRemote source={post.content} />
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {post.content}
+          </ReactMarkdown>
         </div>
 
         {/* CTA */}

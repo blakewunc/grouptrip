@@ -24,6 +24,7 @@ interface EnterScoresDialogProps {
   members: Member[]
   open: boolean
   onOpenChange: (open: boolean) => void
+  onScoresSaved?: (courseName: string) => void
 }
 
 type Mode = 'final' | 'hole-by-hole'
@@ -41,6 +42,7 @@ export function EnterScoresDialog({
   members,
   open,
   onOpenChange,
+  onScoresSaved,
 }: EnterScoresDialogProps) {
   const [mode, setMode] = useState<Mode>('final')
   const [loading, setLoading] = useState(false)
@@ -117,6 +119,7 @@ export function EnterScoresDialog({
 
       toast.success('Scores saved')
       onOpenChange(false)
+      onScoresSaved?.(teeTime.course_name)
     } catch (err: any) {
       toast.error(err.message)
     } finally {

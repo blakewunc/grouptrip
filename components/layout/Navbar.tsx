@@ -7,6 +7,25 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useBrand } from '@/lib/BrandProvider'
 
+function HamburgerIcon({ open }: { open: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      {open ? (
+        <>
+          <line x1="4" y1="4" x2="16" y2="16" />
+          <line x1="16" y1="4" x2="4" y2="16" />
+        </>
+      ) : (
+        <>
+          <line x1="3" y1="6" x2="17" y2="6" />
+          <line x1="3" y1="10" x2="17" y2="10" />
+          <line x1="3" y1="14" x2="17" y2="14" />
+        </>
+      )}
+    </svg>
+  )
+}
+
 export function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
@@ -15,6 +34,20 @@ export function Navbar() {
   const [user, setUser] = useState<any>(null)
 
   const isBackNine = brand.id === 'backNine'
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (isBackNine) {
+      fetch('/api/admin/settings')
+        .then((r) => r.ok ? r.json() : null)
+        .then((data) => {
+          const url = data?.settings?.site_logo?.url
+          if (url) setLogoUrl(url)
+        })
+        .catch(() => {})
+    }
+  }, [isBackNine])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -43,6 +76,7 @@ export function Navbar() {
   if (isBackNine) {
     // The Starter — dark ink navbar matching HTML mockup
     return (
+      <>
       <nav style={{
         background: 'var(--ink)',
         height: '52px',
@@ -57,133 +91,105 @@ export function Navbar() {
       }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <div style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '50%',
-            background: 'var(--cream)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--ink)" strokeWidth="1.5">
-              <circle cx="7" cy="4.5" r="2.2" />
-              <path d="M2.5 12c0-2.5 2-4.5 4.5-4.5S11.5 9.5 11.5 12" />
-            </svg>
-          </div>
-          <span style={{
-            fontFamily: 'var(--serif)',
-            fontSize: '19px',
-            fontWeight: 400,
-            color: 'var(--cream)',
-            letterSpacing: '0.02em',
-          }}>
-            The Starter
-          </span>
+          {logoUrl ? (
+            <img src={logoUrl} alt="The Starter" style={{ height: '28px', width: 'auto', objectFit: 'contain' }} />
+          ) : (
+            <>
+              <div style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: 'var(--cream)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--ink)" strokeWidth="1.5">
+                  <circle cx="7" cy="4.5" r="2.2" />
+                  <path d="M2.5 12c0-2.5 2-4.5 4.5-4.5S11.5 9.5 11.5 12" />
+                </svg>
+              </div>
+              <span style={{
+                fontFamily: 'var(--serif)',
+                fontSize: '19px',
+                fontWeight: 400,
+                color: 'var(--cream)',
+                letterSpacing: '0.02em',
+              }}>
+                The Starter
+              </span>
+            </>
+          )}
         </Link>
 
-        {/* Center links */}
+        {/* Desktop center links */}
         {user && (
-          <div style={{ display: 'flex', gap: '28px' }}>
-            <Link
-              href="/trips"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.05em',
-                color: isActive('/trips') ? 'var(--cream)' : 'rgba(245,241,237,0.45)',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-              }}
-            >
-              My golf trips
-            </Link>
-            <Link
-              href="/my-group"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.05em',
-                color: pathname.startsWith('/my-group') ? 'var(--cream)' : 'rgba(245,241,237,0.45)',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-              }}
-            >
-              My group
-            </Link>
-            <Link
-              href="/blog"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.05em',
-                color: pathname.startsWith('/blog') ? 'var(--cream)' : 'rgba(245,241,237,0.45)',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-              }}
-            >
-              Blog
-            </Link>
-            <Link
-              href="/trips/new"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.05em',
-                color: isActive('/trips/new') ? 'var(--cream)' : 'rgba(245,241,237,0.45)',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-              }}
-            >
-              Plan a trip
-            </Link>
+          <div className="hidden md:flex" style={{ gap: '28px' }}>
+            {[
+              { href: '/trips', label: 'My golf trips', active: isActive('/trips') },
+              { href: '/my-group', label: 'My group', active: pathname.startsWith('/my-group') },
+              { href: '/blog', label: 'Blog', active: pathname.startsWith('/blog') },
+              { href: '/trips/new', label: 'Plan a trip', active: isActive('/trips/new') },
+            ].map(({ href, label, active }) => (
+              <Link key={href} href={href} style={{ fontSize: '12px', letterSpacing: '0.05em', color: active ? 'var(--cream)' : 'rgba(245,241,237,0.45)', textDecoration: 'none' }}>
+                {label}
+              </Link>
+            ))}
           </div>
         )}
 
         {/* Right side */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {user ? (
             <>
-              <span style={{ fontSize: '12px', color: 'rgba(245,241,237,0.38)' }}>
-                {user.email}
-              </span>
-              <Link
-                href="/settings"
-                style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'rgba(245,241,237,0.45)', textDecoration: 'none' }}
-              >
-                Settings
-              </Link>
-              <button
-                onClick={handleSignOut}
-                style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'rgba(245,241,237,0.45)', background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                Sign out
-              </button>
+              <Link href="/settings" className="hidden md:block" style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'rgba(245,241,237,0.45)', textDecoration: 'none' }}>Settings</Link>
+              <button onClick={handleSignOut} className="hidden md:block" style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'rgba(245,241,237,0.45)', background: 'none', border: 'none', cursor: 'pointer' }}>Sign out</button>
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'rgba(245,241,237,0.45)', textDecoration: 'none' }}
-              >
-                Log in
-              </Link>
-              <Link
-                href="/signup"
-                style={{
-                  fontSize: '12px',
-                  letterSpacing: '0.05em',
-                  color: 'var(--ink)',
-                  background: 'var(--cream)',
-                  padding: '7px 16px',
-                  borderRadius: '4px',
-                  textDecoration: 'none',
-                  fontWeight: 500,
-                }}
-              >
-                Sign up
-              </Link>
+              <Link href="/login" className="hidden md:block" style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'rgba(245,241,237,0.45)', textDecoration: 'none' }}>Log in</Link>
+              <Link href="/signup" style={{ fontSize: '12px', letterSpacing: '0.05em', color: 'var(--ink)', background: 'var(--cream)', padding: '7px 16px', borderRadius: '4px', textDecoration: 'none', fontWeight: 500 }}>Sign up</Link>
             </>
+          )}
+          {/* Hamburger — mobile only */}
+          {user && (
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              className="md:hidden"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(245,241,237,0.70)', padding: '4px' }}
+              aria-label="Menu"
+            >
+              <HamburgerIcon open={menuOpen} />
+            </button>
           )}
         </div>
       </nav>
+
+      {/* Mobile dropdown */}
+      {menuOpen && user && (
+        <div
+          className="md:hidden"
+          style={{ position: 'fixed', top: '52px', left: 0, right: 0, background: '#1C1A17', borderBottom: '0.5px solid rgba(245,241,237,0.08)', zIndex: 49, padding: '12px 0' }}
+          onClick={() => setMenuOpen(false)}
+        >
+          {[
+            { href: '/trips', label: 'My golf trips' },
+            { href: '/my-group', label: 'My group' },
+            { href: '/blog', label: 'Blog' },
+            { href: '/trips/new', label: 'Plan a trip' },
+            { href: '/settings', label: 'Settings' },
+          ].map(({ href, label }) => (
+            <Link key={href} href={href} style={{ display: 'block', padding: '12px 24px', fontSize: '14px', color: pathname === href ? 'var(--cream)' : 'rgba(245,241,237,0.55)', textDecoration: 'none', letterSpacing: '0.04em' }}>
+              {label}
+            </Link>
+          ))}
+          <button onClick={handleSignOut} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '12px 24px', fontSize: '14px', color: 'rgba(245,241,237,0.40)', background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '0.04em' }}>
+            Sign out
+          </button>
+        </div>
+      )}
+      </>
     )
   }
 
