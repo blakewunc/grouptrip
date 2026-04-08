@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
@@ -8,6 +8,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!user) {
     redirect('/login')
+  }
+
+  // Check admin flag via service client (bypasses RLS)
+  const service = createServiceClient()
+  const { data: profile } = await service
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.is_admin) {
+    redirect('/')
   }
 
   return (
