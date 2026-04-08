@@ -516,9 +516,8 @@ export default function StarterLanding() {
         .sl-features-header { margin-bottom: 72px; }
         .sl-features-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 2px;
-          border: 1px solid var(--border);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
         }
         .sl-feature {
           background: var(--cream);
@@ -527,14 +526,14 @@ export default function StarterLanding() {
           transition: background 0.3s;
         }
         .sl-feature:hover { background: #F9F6F2; }
-        .sl-feature-icon {
-          width: 40px; height: 40px;
-          border: 1px solid var(--border);
-          border-radius: 2px;
-          display: flex; align-items: center; justify-content: center;
+        .sl-feature-num {
+          font-family: monospace;
+          font-size: 12px;
+          color: var(--accent);
+          letter-spacing: 0.08em;
           margin-bottom: 28px;
+          display: block;
         }
-        .sl-feature-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
         .sl-feature-name {
           font-family: var(--serif);
           font-size: 21px;
@@ -702,14 +701,14 @@ export default function StarterLanding() {
           .sl-steps { grid-template-columns: 1fr; gap: 2px; }
           .sl-trips-grid { grid-template-columns: 1fr; }
           .sl-trip-card:first-child { grid-column: span 1; }
-          .sl-features-grid { grid-template-columns: 1fr 1fr; }
+          .sl-features-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
           .sl-reviews-grid { grid-template-columns: 1fr; }
           .sl-cta-banner-img { background-attachment: scroll; }
           .sl-footer-top { flex-direction: column; gap: 36px; }
           .sl-how-header { flex-direction: column; align-items: flex-start; }
           .sl-how-header-right { text-align: left; }
         }
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
           .sl-features-grid { grid-template-columns: 1fr; }
           .sl-hero-actions { flex-direction: column; }
           .sl-hero-headline { font-size: 42px; }
@@ -976,52 +975,28 @@ export default function StarterLanding() {
             </div>
             <div className="sl-features-grid">
 
+              <div className="sl-feature sl-reveal">
+                <span className="sl-feature-num">01</span>
+                <h3 className="sl-feature-name">AI Trip Planner</h3>
+                <p className="sl-feature-desc">Tell us where you&apos;re going. The Starter builds the itinerary, suggests courses, and structures the whole trip — in seconds.</p>
+              </div>
+
               <div className="sl-feature sl-reveal sl-reveal-d1">
-                <div className="sl-feature-icon">
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-                </div>
-                <h3 className="sl-feature-name">Tee Time Coordination</h3>
-                <p className="sl-feature-desc">Schedule rounds, assign foursomes, and keep every tee time, course, and cart assignment in one shared view. No more forwarded emails.</p>
+                <span className="sl-feature-num">02</span>
+                <h3 className="sl-feature-name">Cost Splitting</h3>
+                <p className="sl-feature-desc">Green fees, lodging, caddies, that late-night whisky — log it once. Everyone sees their share. No more Venmo math at checkout.</p>
               </div>
 
               <div className="sl-feature sl-reveal sl-reveal-d2">
-                <div className="sl-feature-icon">
-                  <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-                </div>
+                <span className="sl-feature-num">03</span>
                 <h3 className="sl-feature-name">Live Scoring</h3>
-                <p className="sl-feature-desc">Real-time scores with handicap adjustments baked in. Net, gross, and stroke play — the leaderboard updates the moment someone taps a putt.</p>
+                <p className="sl-feature-desc">Real-time scores with handicap adjustments baked in. The leaderboard updates the moment someone taps a putt.</p>
               </div>
 
               <div className="sl-feature sl-reveal sl-reveal-d3">
-                <div className="sl-feature-icon">
-                  <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                </div>
-                <h3 className="sl-feature-name">Cost Splitting</h3>
-                <p className="sl-feature-desc">Green fees, lodging, caddies, dinners, that late-night whisky — log it once. Everyone sees their share. No more Venmo math or awkward asks at checkout.</p>
-              </div>
-
-              <div className="sl-feature sl-reveal sl-reveal-d4">
-                <div className="sl-feature-icon">
-                  <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                </div>
-                <h3 className="sl-feature-name">Nassau &amp; Skins</h3>
-                <p className="sl-feature-desc">Set the stakes before the first tee. Track holes, carry overs, and press bets in real time. Payouts calculated automatically — no disputes at the bar.</p>
-              </div>
-
-              <div className="sl-feature sl-reveal sl-reveal-d1">
-                <div className="sl-feature-icon">
-                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                </div>
-                <h3 className="sl-feature-name">Foursomes &amp; Group Maker</h3>
-                <p className="sl-feature-desc">Input your group size and number of rounds. The Starter builds rotating pairings so everyone plays with everyone — no organizer math required.</p>
-              </div>
-
-              <div className="sl-feature sl-reveal sl-reveal-d2">
-                <div className="sl-feature-icon">
-                  <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                </div>
-                <h3 className="sl-feature-name">Payout Calculation</h3>
-                <p className="sl-feature-desc">Nassau, skins, wolf — every bet tracked, every side game settled. The Starter calculates who owes what at the 19th hole. No spreadsheet, no argument.</p>
+                <span className="sl-feature-num">04</span>
+                <h3 className="sl-feature-name">Betting &amp; Payouts</h3>
+                <p className="sl-feature-desc">Nassau, skins, wolf — set the stakes, track carry overs, collect at the 19th. Calculated automatically. No disputes at the bar.</p>
               </div>
 
             </div>
