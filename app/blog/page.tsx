@@ -2,7 +2,7 @@ import { getAllPosts } from '@/lib/blog'
 import type { Metadata } from 'next'
 import BlogIndex from './BlogIndex'
 
-export const revalidate = 60
+export const revalidate = 30
 
 export const metadata: Metadata = {
   title: 'Golf Trip Guides & Tips | The Starter',
