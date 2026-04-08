@@ -1,121 +1,274 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
-  title: 'The Back Nine — Golf Trip Planner for Your Crew',
-  description: 'Plan your golf trip with the boys. Tee times, scorecards, expense splitting, group availability, and full itineraries — everything your golf crew needs in one place.',
-  keywords: ['golf trip planner', 'golf group planner', 'tee time planner', 'golf scorecard app', 'golf trip organizer', 'golf vacation planner'],
+  title: 'The Starter — Golf Trip Planner for Your Crew',
+  description:
+    'Plan your golf trip end-to-end. Split costs, build the itinerary, set the stakes, and send one link. The Starter keeps the group on the same page — before, during, and after.',
+  keywords: [
+    'golf trip planner',
+    'golf group planner',
+    'tee time planner',
+    'golf scorecard app',
+    'golf trip organizer',
+    'golf vacation planner',
+    'nassau betting',
+    'golf skins',
+  ],
   openGraph: {
-    title: 'The Back Nine — Golf Trip Planner for Your Crew',
-    description: 'Tee times, scorecards, and expense splitting for your golf crew. Plan your next trip in minutes.',
+    title: 'The Starter — Golf Trip Planner for Your Crew',
+    description:
+      'Split costs, build the itinerary, set the stakes. Send one link and The Starter keeps the group on the same page.',
     type: 'website',
-    siteName: 'The Back Nine',
+    siteName: 'The Starter by GroupTrip',
   },
   twitter: {
     card: 'summary',
-    title: 'The Back Nine — Golf Trip Planner',
-    description: 'Tee times, scorecards, and expense splitting for your golf crew.',
+    title: 'The Starter — Golf Trip Planner',
+    description: 'The whole trip, not just the round.',
   },
 }
 
-const TeeTimeIcon = () => (
-  <svg className="h-7 w-7 text-[#8ECC7A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-)
-
-const TrophyIcon = () => (
-  <svg className="h-7 w-7 text-[#8ECC7A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
-  </svg>
-)
-
-const SplitIcon = () => (
-  <svg className="h-7 w-7 text-[#8ECC7A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-)
-
-const ItineraryIcon = () => (
-  <svg className="h-7 w-7 text-[#8ECC7A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
-  </svg>
-)
-
-export default function BackNineLanding() {
+export default function StarterLanding() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#0B442D] to-[#092D3D] px-4">
-      <main className="mx-auto max-w-3xl text-center">
-        {/* Logo */}
-        <div className="mb-6 flex justify-center">
-          <svg className="h-16 w-16 text-[#8ECC7A]" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M16 2v18M16 20c0 0-6 2-6 6h12c0-4-6-6-6-6z" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M16 2l8 5-8 5V2z" fill="currentColor" stroke="none" />
-          </svg>
-        </div>
+    <div className="bg-[#F5F1ED] text-[#092D3D]">
 
-        <h1 className="mb-4 text-5xl font-bold tracking-tight text-white sm:text-6xl">
-          The Back Nine
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-4xl px-6 pb-20 pt-24 sm:pt-32">
+        <p className="mb-6 text-xs font-semibold uppercase tracking-[0.18em] text-[#70798C]">
+          The Starter — Golf Trip Planner
+        </p>
+
+        <h1 className="font-['Playfair_Display',Georgia,serif] mb-6 text-5xl font-bold leading-[1.1] tracking-tight text-[#092D3D] sm:text-6xl lg:text-7xl">
+          The whole trip,{' '}
+          <em className="italic text-[#70798C]">not just the round.</em>
         </h1>
-        <p className="mb-4 text-xl text-[#8ECC7A]">
-          Plan your next golf trip with the boys
-        </p>
-        <p className="mb-10 text-base text-[#B8D4C4]">
-          Tee times, scorecards, expense splitting, and full itineraries — everything your crew needs in one place.
+
+        <p className="mb-10 max-w-xl text-base leading-relaxed text-[#5A7A6B] sm:text-lg">
+          Split costs. Build the itinerary. Set the stakes. Send one link and
+          The Starter keeps the group on the same page — before, during, and
+          after.
         </p>
 
-        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <Link href="/login">
-            <Button size="lg" className="w-full bg-[#12733C] text-white hover:bg-[#0B442D] sm:w-auto px-10">
-              Plan Your Golf Trip
-            </Button>
+        <div className="mb-10 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/signup"
+            className="inline-flex items-center justify-center rounded-[5px] bg-[#092D3D] px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#074B63]"
+          >
+            Plan your trip
           </Link>
-          <Link href="/signup" className="text-sm text-[#8ECC7A] underline-offset-2 hover:underline">
-            or create an account
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center rounded-[5px] border border-[#DAD2BC] bg-white px-8 py-3 text-sm font-semibold text-[#092D3D] transition-colors hover:bg-[#F5F1ED]"
+          >
+            Sign in
           </Link>
         </div>
-        <p className="mt-3 text-xs text-[#5A7A6B]">Free to get started — no credit card required</p>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2">
-          <div className="rounded-[5px] border border-[#B8D4C4]/20 bg-white/5 p-6 backdrop-blur-sm transition-colors duration-200 hover:bg-white/10">
-            <div className="mb-3 flex justify-center">
-              <TeeTimeIcon />
-            </div>
-            <h3 className="mb-2 font-semibold text-white">Tee Times</h3>
-            <p className="text-sm text-[#B8D4C4]">
-              Schedule rounds, assign foursomes, and keep everyone on the same tee sheet
-            </p>
-          </div>
-          <div className="rounded-[5px] border border-[#B8D4C4]/20 bg-white/5 p-6 backdrop-blur-sm transition-colors duration-200 hover:bg-white/10">
-            <div className="mb-3 flex justify-center">
-              <TrophyIcon />
-            </div>
-            <h3 className="mb-2 font-semibold text-white">Leaderboard</h3>
-            <p className="text-sm text-[#B8D4C4]">
-              Track scores, handicaps, and see who's buying drinks at the 19th hole
-            </p>
-          </div>
-          <div className="rounded-[5px] border border-[#B8D4C4]/20 bg-white/5 p-6 backdrop-blur-sm transition-colors duration-200 hover:bg-white/10">
-            <div className="mb-3 flex justify-center">
-              <SplitIcon />
-            </div>
-            <h3 className="mb-2 font-semibold text-white">Expense Splitting</h3>
-            <p className="text-sm text-[#B8D4C4]">
-              Split green fees, lodging, and dinner bills — no more awkward Venmo requests
-            </p>
-          </div>
-          <div className="rounded-[5px] border border-[#B8D4C4]/20 bg-white/5 p-6 backdrop-blur-sm transition-colors duration-200 hover:bg-white/10">
-            <div className="mb-3 flex justify-center">
-              <ItineraryIcon />
-            </div>
-            <h3 className="mb-2 font-semibold text-white">Full Itinerary</h3>
-            <p className="text-sm text-[#B8D4C4]">
-              Plan every day from morning rounds to dinner reservations
-            </p>
+        <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-[#A99985]">
+          <span>Free to start</span>
+          <span>No credit card</span>
+          <span>Works for groups of 4–20</span>
+        </div>
+      </section>
+
+      {/* ── Feature Tiles ─────────────────────────────────────────── */}
+      <section className="border-t border-[#DAD2BC]">
+        <div className="mx-auto max-w-5xl px-6 py-20">
+          <div className="grid gap-0 divide-y divide-[#DAD2BC] sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4 lg:divide-y-0">
+            {[
+              {
+                num: '01',
+                title: 'Cost splitting',
+                body: 'Green fees, lodging, dinners, carts. Everyone sees what they owe. No more awkward asks or Venmo math.',
+                chip: 'No more Venmo math.',
+              },
+              {
+                num: '02',
+                title: 'Itinerary & lodging',
+                body: 'Build the full schedule. Arrival times, dinners, tee times. One place the group actually checks.',
+                chip: 'One link. Whole trip.',
+              },
+              {
+                num: '03',
+                title: 'Tee time coordination',
+                body: 'Schedule rounds, assign foursomes, keep everyone on the same sheet. No more reply-all chaos.',
+                chip: 'Foursomes sorted.',
+              },
+              {
+                num: '04',
+                title: 'Nassau & skins',
+                body: 'Set stakes, track bets, calculate payouts at the 19th hole. Handicap-adjusted.',
+                chip: 'Handled at the turn.',
+              },
+            ].map((tile) => (
+              <div
+                key={tile.num}
+                className="flex flex-col gap-4 px-6 py-10 sm:first:pl-0 lg:first:pl-0"
+              >
+                <span className="text-xs font-semibold tracking-widest text-[#A99985]">
+                  {tile.num}
+                </span>
+                <h3 className="font-['Playfair_Display',Georgia,serif] text-lg font-bold leading-snug text-[#092D3D]">
+                  {tile.title}
+                </h3>
+                <p className="flex-1 text-sm leading-relaxed text-[#5A7A6B]">
+                  {tile.body}
+                </p>
+                <span className="inline-block self-start rounded-[5px] bg-[#D8EADF] px-3 py-1 text-xs font-medium text-[#074B63]">
+                  {tile.chip}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* ── Social proof ──────────────────────────────────────────── */}
+      <section className="border-t border-[#DAD2BC] bg-white">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <div className="grid gap-10 sm:grid-cols-4">
+            <div className="sm:col-span-3">
+              <div className="grid grid-cols-3 divide-x divide-[#DAD2BC]">
+                {[
+                  { stat: '840+', label: 'Trips planned' },
+                  { stat: '$2.4M', label: 'Costs split' },
+                  { stat: '4.8', label: 'App rating' },
+                ].map((item) => (
+                  <div key={item.label} className="px-6 first:pl-0">
+                    <p className="font-['Playfair_Display',Georgia,serif] text-3xl font-bold text-[#092D3D]">
+                      {item.stat}
+                    </p>
+                    <p className="mt-1 text-xs text-[#A99985]">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="sm:col-span-1">
+              <p className="text-sm italic leading-relaxed text-[#70798C]">
+                &ldquo;Saved me six group texts and one very uncomfortable
+                Venmo request.&rdquo;
+              </p>
+              <p className="mt-2 text-xs text-[#A99985]">
+                — Trip organizer, Pinehurst trip. 2024
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── One link section ──────────────────────────────────────── */}
+      <section className="border-t border-[#DAD2BC]">
+        <div className="mx-auto max-w-5xl px-6 py-24">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+
+            {/* Left copy */}
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#70798C]">
+                The viral entry point
+              </p>
+              <h2 className="font-['Playfair_Display',Georgia,serif] mb-6 text-4xl font-bold leading-tight text-[#092D3D] sm:text-5xl">
+                One link sends the group.
+              </h2>
+              <p className="text-base leading-relaxed text-[#5A7A6B]">
+                The organizer builds the trip once. Everyone else gets a link.
+                They see the itinerary, what they owe, and when to show up —
+                no account required to view.
+              </p>
+            </div>
+
+            {/* Invite card mockup */}
+            <div className="rounded-[5px] border border-[#DAD2BC] bg-white p-8 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70798C]">
+                You&apos;ve been sent off
+              </p>
+              <h3 className="font-['Playfair_Display',Georgia,serif] mb-1 text-2xl font-bold text-[#092D3D]">
+                Pebble Beach, May 2025
+              </h3>
+              <p className="mb-6 text-sm text-[#5A7A6B]">
+                Marcus added you to a 10-person golf trip
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: 'Dates', value: 'May 9–12' },
+                  { label: 'Your share', value: '$680' },
+                  { label: 'Rounds', value: '3 rounds' },
+                  { label: 'Group size', value: '10 people' },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-[5px] bg-[#F5F1ED] p-3"
+                  >
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A99985]">
+                      {item.label}
+                    </p>
+                    <p className="mt-0.5 text-sm font-semibold text-[#092D3D]">
+                      {item.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── On the course ─────────────────────────────────────────── */}
+      <section className="border-t border-[#DAD2BC] bg-[#092D3D]">
+        <div className="mx-auto max-w-5xl px-6 py-24">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#5A7A6B]">
+            On the course
+          </p>
+          <h2 className="font-['Playfair_Display',Georgia,serif] mb-14 text-4xl font-bold leading-tight text-white sm:text-5xl">
+            When the round starts, The Starter runs it.
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                title: 'Live scoring',
+                body: 'Scores, handicap adjustments, and leaderboard — updated in real time. Everyone sees where they stand.',
+              },
+              {
+                title: 'Nassau, skins, wolf',
+                body: 'Set the format before the first tee. Bets track automatically. Payouts are ready at the 19th.',
+              },
+              {
+                title: 'Payout summary',
+                body: 'No more Venmo math. The Starter calculates who owes what across every bet and side game.',
+              },
+            ].map((card) => (
+              <div
+                key={card.title}
+                className="rounded-[5px] border border-[#074B63] bg-[#0B3D54] p-6"
+              >
+                <h3 className="mb-3 font-semibold text-white">{card.title}</h3>
+                <p className="text-sm leading-relaxed text-[#B8D4C4]">
+                  {card.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Bottom CTA ────────────────────────────────────────────── */}
+      <section className="border-t border-[#DAD2BC]">
+        <div className="mx-auto max-w-3xl px-6 py-24 text-center">
+          <h2 className="font-['Playfair_Display',Georgia,serif] mb-4 text-4xl font-bold text-[#092D3D] sm:text-5xl">
+            Golf trips, handled.
+          </h2>
+          <p className="mb-10 text-base text-[#5A7A6B]">
+            Free to start. No credit card. Works for groups of 4–20.
+          </p>
+          <Link
+            href="/signup"
+            className="inline-flex items-center justify-center rounded-[5px] bg-[#092D3D] px-10 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#074B63]"
+          >
+            Plan your trip
+          </Link>
+        </div>
+      </section>
+
     </div>
   )
 }
